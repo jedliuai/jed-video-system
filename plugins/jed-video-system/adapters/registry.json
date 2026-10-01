@@ -11,11 +11,12 @@
       "note": "实际样图、复用与未发布副本已通过；绑定意图、输入/实现版本、相关审片和执行回执；非通用外部执行器。"
     },
     "chapters": {
-      "status": "implemented-insert-preview-and-cover-handoff-pilot",
+      "status": "implemented-editable-inserted-handoff-pilot",
       "entry": "scripts/chapters.py",
       "deliveryEntry": "scripts/chapter_delivery.py",
-      "note": "0.6句间独立插入1.8秒章节与短声音，原口播完整保留；42.6秒预览与9.8秒语境小样完成，用户认可音效和衔接。插入版尚未接入剪映草稿；旧cover四轨隔离草稿保留，UI待验收。非通用生产流水线。",
-      "insertionEntry": "scripts/prepare_chapter_insert.py"
+      "note": "0.7插入版42.6秒工程已登记剪映首页，11轨29段；底片/原声分离、16文字字幕、2透明Remotion模块、原生章节图片及编号标题、独立短音效。字体内联、关键帧/映射/登记读回通过，原生文字排版、播放保存导出待UI验证。仅固定试验，不接管手调后的工程重建。",
+      "insertionEntry": "scripts/prepare_chapter_insert.py",
+      "editableDeliveryEntry": "scripts/editable_chapter_delivery.py"
     },
     "routing": {
       "status": "implemented-planning-only",
@@ -55,18 +56,18 @@
     "jianying-mcp": {
       "status": "external-connected-readonly-verified",
       "configKey": "jianying.runtimeManifest",
-      "note": "2026-10-01本轮doctor、音效指南、缓存搜索真实成功，剪映当前未运行；旧安装目录缺项已不代表本轮状态。未重复启动服务或重新认证；草稿写入和UI另行验证。"
+      "note": "2026-10-01本轮doctor、音效指南、缓存搜索及已发布11轨草稿inspect真实成功；旧安装目录缺项不代表本轮状态。草稿由既有Bridge登记，MCP只读验收；未重复启动服务或重新认证。"
     },
     "jianying-draft": {
       "status": "implemented-structure-pending-ui",
       "configKey": "jianying.python",
       "entry": "../../workers/draft-adapter/worker.py",
-      "note": "隔离初稿、内联素材、16可编辑字幕与首页登记回读通过；透明播放/保存重开/导出待UI验证。"
+      "note": "0.7插入版11轨29段、16文字字幕、原生图片和编号标题、内联字体及首页登记回读通过；原生排版/透明播放/保存重开/导出待UI验证。初始化入口不重建手调工程。"
     },
     "sound-design": {
-      "status": "implemented-cached-chapter-preview-pilot",
+      "status": "implemented-cached-chapter-track-pilot",
       "configKey": "soundDesign.skill",
-      "note": "调用既有声音skill和剪映MCP查本机缓存，准备1.1秒降音量与淡变的转场音效，严格落在独立章节区间。用户已认可真实语境小样；其他声音策略与通用草稿编排待接入。"
+      "note": "调用既有声音skill和MCP查缓存，1.1秒准备好的转场声独立占剪映音效轨，原口播另轨。用户已认可语境小样，声音区间与登记读回通过；其他策略与通用生产编排待接入。"
     },
     "talking-head-edit": {
       "status": "constraints-and-mapping-only",

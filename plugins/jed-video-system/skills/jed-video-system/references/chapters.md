@@ -34,4 +34,6 @@
 
 小样绑定visual_sample范围、具体视频SHA、styleRevision、operationVersion及底图/结构/源/props/实现依赖。0.5的 `scripts/chapter_delivery.py`默认规划，显式--execute才复用当前已确认props，生成完整预览、独立Alpha和未发布草稿；具体步骤见项目根 `docs/chapter-delivery.md`。它检查实际批准和文件摘要，不给其他props借用一个风格批准。完整预览与章节Asset复用同一组件，保留已确认源文件；不为导出而改写其视觉代码使原批准失效。
 
-该旧cover入口记录章节配方已批准、整片尚未批准，明确拒绝chapter-insert计划。数字标题可在Remotion参数中编辑，剪映中为合成MOV；原字幕独立可编辑。音频和图像检查不等于人的效果接受；旧四轨隔离草稿结构通过，应用播放、保存重开和原生导出待验证。新的插入预览尚未接入剪映草稿，不能拿旧40.8秒工程当作新42.6秒交接成功。
+该旧cover入口记录章节配方已批准、整片尚未批准，明确拒绝chapter-insert计划。旧接口的章节数字标题在剪映中为合成MOV。0.7另有 `scripts/editable_chapter_delivery.py`：核验当前插入小样批准及递归真实文件摘要，拆分Remotion透明模块、原声、原生章节图片/文字与短音效，交接42.6秒11轨新草稿，已登记首页并回读。默认规划；显式--execute才建新副本，--publish才经既有Bridge登记。见项目根 `docs/editable-chapter-delivery.md`。
+
+新接口的16条字幕和章节编号标题是原生文字，图片保留原生成分辨率并带可编辑缩放/透明度关键帧；2个复杂Remotion块是独立透明MOV，内部内容仍需在Remotion修改。字体随草稿内联，文字保留真实字体引用。原生排版、文字动画资源加载和播放保存导出待应用验证，不能把小样认可泛化为原生还原已验收。初始化只建新工程，用户手调后继续编辑需读取最新已保存草稿，不能用初始props抹掉调整。

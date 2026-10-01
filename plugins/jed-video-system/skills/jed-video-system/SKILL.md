@@ -5,7 +5,7 @@ description: Orchestrate Jed video production using available external editing t
 
 # Jed Video System
 
-本插件负责审核、路由、项目约束、时间计划和人工审片记录。ChatCut、剪映MCP/CLI、Remotion、Video Use、声音skill、agy保持外部依赖；进入相应环节才发现工具、读其skill并调用，不复制整个第三方插件、认证或服务。0.6增加章节独立停顿与短音效预览；原有路由、审片、受控本机动作及cover草稿交接保留。仍无通用自动执行器，不能把路线选择当成已完成编辑。详细分工见 [orchestration.md](references/orchestration.md)；实际运行本机试验时读 [dispatch.md](references/dispatch.md)。
+本插件负责审核、路由、项目约束、时间计划和人工审片记录。ChatCut、剪映MCP/CLI、Remotion、Video Use、声音skill、agy保持外部依赖；进入相应环节才发现工具、读其skill并调用，不复制整个第三方插件、认证或服务。0.7增加独立章节停顿的可编辑剪映分轨交接；原有路由、审片、受控本机动作及cover草稿交接保留。仍无通用自动执行器，不能把路线选择当成已完成编辑。详细分工见 [orchestration.md](references/orchestration.md)；实际运行本机试验时读 [dispatch.md](references/dispatch.md)。
 
 每个项目只有一个当前主时间线。固定品牌动效优先Remotion；ChatCut连接可用时优先试验脚本精修、字幕和可编辑审片；Video Use本地转录、声音策略和剪映交付保留。ChatCut向本地输出片段时须有实测源时间映射；没有映射就留在单编辑器闭环。托管ChatCut不能冒充Desktop的剪映草稿导出。
 
@@ -20,6 +20,10 @@ description: Orchestrate Jed video production using available external editing t
 分模块讲述时读取 [chapters.md](references/chapters.md)：按视频大体结构找主要边界并概括模块，不假设每段都有起因和总结。先做统一画风的真实转场小样；图像工具负责主题底图，Remotion或可用编辑器负责可编辑数字/标题与轻动效。首次确认画风、时长、声音连续或停顿，再复用同配方。录屏内部的小操作不自动加整屏转场。
 
 Jed本项目现已明确并通过真实小样确认：浅色剪纸加蓝色点缀、1.8秒独立章节停顿、只有短转场音效、随后接回口播。复用该偏好，不重问要不要暂停；在已核查的句间插入新时段，完整保留源语音，字幕和动效按同一映射后移。不要把源语音直接静音掉。新的声音或不同节奏只重审受影响的带前后语境小样；其他客户不自动继承Jed偏好。插入预览入口及其草稿限制见章节reference。
+
+Jed要求保留剪映手动微调能力：底片、字幕、Remotion模块、章节图片/编号/标题、原声与音效分轨，字幕和章节文字优先原生可编辑，图片动画使用独立图片和可调关键帧。整体烧录视频用于审片预览，不能代替可编辑工程。复杂Remotion块可作为独立透明视频调整位置/时长，其内部图形仍由Remotion参数修改，不宣称剪映可拆开改每个图形。具体交接读项目根 `docs/editable-chapter-delivery.md`。
+
+继续一个经过手调的项目时先读取最新已保存草稿，本机活动工程位置在 `work/active-project.json`。保留用户改过的字幕、时间、音量、图片位置及未知字段，不能回初始props重建并丢掉调整。初始化分轨入口只建新副本，尚不能把手调草稿自动重编译成新计划；需要追加时先用既有inspect/Bridge支持的副本编辑，超出能力再做对应adapter。用户没改工程前同一成功job可复用；生成回执是当时的快照，不把手动保存后的哈希变化当作工程损坏。登记前遵循既有Bridge检查，剪映运行时不强制关闭。
 
 能力边界、问询键名和路径配置见 [workflow.md](references/workflow.md) 与插件 `adapters/registry.json`。0.2 本机阶段已可执行转录、人工计划的帧时间编译、真实原声预览、独立透明动效与隔离剪映草稿；只在原声明范围内操作。入口依赖绑定的项目根 `scripts/`、`motion-lab/` 与 `workers/`，尚未打包成脱离工作区的通用安装包。
 

@@ -6,6 +6,17 @@
     "overlayPanels": false,
     "source": "explicit-user-preference"
   },
+  "timelineEditability": {
+    "source": "explicit-user-preference",
+    "targetEditor": "jianying-desktop",
+    "separateLayers": true,
+    "nativeCaptions": true,
+    "nativeChapterImageTitleAndNumber": true,
+    "remotionBlocks": "separate-alpha-clips",
+    "separateVoiceAndSoundEffects": true,
+    "burnInUse": "reference-preview-only",
+    "afterManualChanges": "inspect-latest-saved-draft-and-preserve-adjustments"
+  },
   "chapterTransitions": {
     "styleId": "jed-paper-blue",
     "styleRevision": "r1",

@@ -1,6 +1,6 @@
 {
   "name": "jed-video-system",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Jed 视频编排原型：条件问询、外部路由、版本绑定审片、受控本机执行与统一画风章节转场。",
   "author": {"name": "jedliuai"},
   "keywords": ["video", "remotion", "jianying", "chatcut", "intake", "review", "chapters"],

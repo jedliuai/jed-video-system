@@ -446,7 +446,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
         sys.stderr.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("build", "preview", "probe", "inspect-source"))
+    parser.add_argument("command", choices=("build", "preview", "inserted", "probe", "inspect-source"))
     parser.add_argument("--input", help="UTF-8 JSON file; omit to read stdin")
     parser.add_argument("--publish", action="store_true", help="build only: call the existing Bridge publication transaction")
     args = parser.parse_args()
@@ -457,6 +457,11 @@ def main():
                 result = build(spec, args.publish)
             elif args.command == "preview":
                 result = preview(spec, args.publish)
+            elif args.command == "inserted":
+                if args.publish:
+                    raise ValueError('Inserted draft is prepared first; publish its verified build separately')
+                import inserted
+                result = inserted.build_inserted(spec, sys.modules[__name__])
             elif args.command == "probe":
                 result = media_probe(spec)
             else:

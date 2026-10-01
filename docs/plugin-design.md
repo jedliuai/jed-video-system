@@ -1,4 +1,4 @@
-# Jed Video System 编排插件原型 0.6
+# Jed Video System 编排插件原型 0.7
 
 项目已有公开仓库 https://github.com/jedliuai/jed-video-system。本地插件包位于 `plugins/jed-video-system/.codex-plugin/plugin.json`；尚未安装为全局插件，也不是完全脱离工作区的通用执行包。
 
@@ -17,7 +17,7 @@
 | Jianying draft / Bridge | 隔离组装、内联、字幕与首页事务通过；应用播放、保存重开和原生导出待验证 |
 | ChatCut | Codex界面确认已安装启用；当前旧会话工具未加载，编辑和时间读回尚未实测 |
 | Local dispatcher | 已接样图与未发布草稿；版本、意图、相关审片及回执；其他入口未全接，非通用执行器 |
-| Chapters | host分析主要章节；新增句间独立停顿、短音效和同步后移，42.6秒候选完成；新版声音衔接获确认，插入草稿待接入；旧cover四轨草稿保留 |
+| Chapters | host分析主要章节；句间独立停顿、短音效和同步后移；42.6秒11轨工程已登记，图片/章节文字、2透明块及声音独立；UI待验收 |
 
 机器可读状态见 `adapters/registry.json`。单次路线的`route_ready`不是生产就绪；`executionAuthorized`固定false。intake的`productionAdaptersReady=false`保持原义，避免把一个规划返回码冒充完整生产能力。
 
@@ -33,8 +33,8 @@
 
 ## 试验结果与下一步
 
-本轮157项行为测试通过。用户在认可浅色剪纸画风之后，明确要求章节期间不说话，已生成独立1.8秒停顿与短音效，再接回完整口播。9.8秒语境小样获回复“认可这版音效和衔接”；42.6秒完整候选及源/输出映射校时通过，见 [chapter-insertion.md](chapter-insertion.md)。旧40.8秒连续原声cover与未发布四轨草稿留作历史，见 [chapter-delivery.md](chapter-delivery.md)。样片确认不等于整片接受。
+本轮170项行为测试通过。用户要求手动微调便利，已交接42.6秒11轨29段工程到剪映首页，独立原声与音效、16文字字幕、2透明块、原生章节图片及标题编号，字体内联和登记回读通过，见 [editable-chapter-delivery.md](editable-chapter-delivery.md)。此前9.8秒语境小样获回复“认可这版音效和衔接”，见 [chapter-insertion.md](chapter-insertion.md)。旧cover留作历史；样片确认不等于原生排版、应用播放或整片已验收。
 
-下一步将已确认插入配方接到剪映隔离草稿，底片按源/输出映射分段，声音占独立章节区间，字幕和透明层一起后移；再做应用播放、保存重开与原生导出验收。章节标题在剪映内直接编辑尚未实现。在加载ChatCut工具的会话里做隔离短样，验证一处停顿、字幕同步及源/输出片段读回。可靠时间交接之前不跨编辑器双写；按实际需求扩展动作目录与旧入口审片检查，官方插件保持原样。
+下一步在剪映实际核查原生文字排版、动画资源、播放、保存重开与原生导出。用户手调后先读取最新已保存草稿，不能用原props重建抹掉调整；初始化入口未实现任意手调工程的反向编译。在加载ChatCut工具的会话里做隔离短样，验证一处停顿、字幕同步及源/输出片段读回。可靠时间交接之前不跨编辑器双写；按实际需求扩展动作目录与旧入口审片检查，官方插件保持原样。
 
 详细判断见 [editor-routing-and-human-review.md](editor-routing-and-human-review.md)，技能入口见插件 `skills/jed-video-system/SKILL.md`。

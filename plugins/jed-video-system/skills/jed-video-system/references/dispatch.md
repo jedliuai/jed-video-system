@@ -15,6 +15,8 @@
 
 当前执行器不发布首页、不导出剪映、不通过任意shell执行用户字符串，也不伪装ChatCut或Remotion官方插件的API。Remotion的本地CLI是已有motion-lab依赖，官方插件仍按其可用工具单独调用。0.5另有 `scripts/chapter_delivery.py`连接已确认章节配方到完整预览和未发布草稿，见 [chapters.md](chapters.md)；它是独立的受控试验入口，尚未纳入此动作目录。
 
+0.7另有 `scripts/editable_chapter_delivery.py`核验插入小样实际批准，默认规划；--execute创建分轨新工程，--publish经已有Bridge登记。已实测11轨29段首页副本。该入口仍独立于此固定动作目录，使用前读章节reference及项目根 `docs/editable-chapter-delivery.md`；不是任意已手调工程重建器，也未把原生UI效果验证自动化。
+
 主skill仍负责本次相关intake约束、语义与审美判断；此入口不替代人的回复、工具身份或应用内验收。原有转录、完整渲染、章节render与Publish入口没有全部自动消费审片状态。不能绕开host检查后声称整个系统受gate保护。
 
 需要上游项目协作时读取项目根 `docs/upstream-handoff-prompts.md`：给用户可复制提示词，由用户转交；ChatCut和Remotion为固定官方依赖，不修改其源码、skill或服务。

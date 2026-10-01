@@ -1,5 +1,7 @@
 # 已确认章节配方的本机交接
 
+本文记录0.5连续原声cover交接。用户随后改为独立章节停顿与短音效，0.6新预览和时间映射见 [chapter-insertion.md](chapter-insertion.md)。此处入口拒绝chapter-insert计划，旧40.8秒草稿不代表新42.6秒插入版交接完成。
+
 0.5新增独立入口 `plugins/jed-video-system/scripts/chapter_delivery.py`，复用已有40.8秒连续单源试验，把已确认的章节卡接到完整预览和未发布剪映草稿。没有复制或修改ChatCut、Remotion官方插件，使用项目原有Remotion 4.0.530本地CLI和既有Jianying Bridge。
 
 ## 运行边界

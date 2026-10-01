@@ -1,6 +1,6 @@
 # 章节转场试验
 
-本文记录0.4小样阶段。0.5已将已确认配方接入完整预览及四轨隔离草稿，最新接口与验收见 [chapter-delivery.md](chapter-delivery.md)；应用内播放与原生导出仍待验证。
+本文记录0.4连续原声小样阶段。0.5的cover交接见 [chapter-delivery.md](chapter-delivery.md)；用户后来明确要求转场期间不说话，0.6独立停顿与短音效已获小样确认，当前接口与验收见 [chapter-insertion.md](chapter-insertion.md)。应用内播放与原生导出仍待验证。
 
 用户提出：分模块口播应先理解大体结构、概括模块，再用可靠一致的简洁图像做章节卡并添加动画。模块独立于口播叠层、B-roll和音效；总控掌握语义与确认，图像工具和现有Remotion分别承担资产与运动。
 

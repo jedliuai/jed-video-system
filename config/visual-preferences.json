@@ -12,12 +12,22 @@
     "artDirection": "light-paper-cut-with-blue-and-small-candy-accents",
     "durationInFrames": 54,
     "fps": 30,
-    "placement": "cover_bridge",
-    "audioPolicy": "continue_source",
+    "placement": "insert_hold",
+    "audioPolicy": "pause_source",
+    "preserveAllSourceSpeech": true,
+    "sound": {
+      "kind": "short-transition-only",
+      "offsetFrames": 3,
+      "durationInFrames": 33,
+      "endsBeforeSpeechResumes": true,
+      "backgroundMusic": false
+    },
     "editableTitleAndNumber": true,
     "source": "explicit-user-sample-acceptance",
     "scope": "jed-live-pilot-sample-recipe",
-    "candidateId": "chapter-demo-sample-r1",
-    "localReviewState": "work/chapters/review-state-r1.json"
+    "visualCandidateId": "chapter-demo-sample-r1",
+    "audioCandidateId": "chapter-insert-sound-sample-r2",
+    "localReviewState": "work/chapters/review-state-insert-r2.json",
+    "acceptanceScope": "shown-r2-sound-and-pacing-sample-not-whole-video"
   }
 }

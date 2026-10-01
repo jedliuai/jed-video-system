@@ -1,19 +1,82 @@
 {
   "schemaVersion": "0.1.0",
   "adapters": {
-    "local-dispatch": {"status": "implemented-fixed-pilot", "entry": "scripts/dispatch.py", "actions": ["remotion-still", "create-isolated-draft"], "note": "实际样图、复用与未发布副本已通过；绑定意图、输入/实现版本、相关审片和执行回执；非通用外部执行器。"},
-    "chapters": {"status": "implemented-isolated-handoff-pilot", "entry": "scripts/chapters.py", "deliveryEntry": "scripts/chapter_delivery.py", "note": "已确认8秒小样配方接入40.8秒完整预览与四轨隔离草稿，透明层/时间/原声检查通过；剪映应用播放待验收，数字标题在MOV中合成，仅Remotion参数可编辑。连续单源cover试验，非通用生产流水线。"},
-    "routing": {"status": "implemented-planning-only", "entry": "scripts/route.py", "note": "根据实际能力快照选择外部后端；不执行、不把路线就绪当授权、不自动切换目的编辑器。"},
-    "human-review": {"status": "implemented-local-state", "entry": "scripts/review.py", "note": "候选与人的决定绑定范围、摘要及版本；本机dispatch已接相关检查，其他旧入口未全接。章节小样已有真实回复回执，不泛化为全片批准。"},
-    "chatcut-hosted": {"status": "external-installed-tools-not-loaded", "note": "2026-10-01用户截图确认Codex已安装启用；本机manifest为1.10.14。当前旧会话无ChatCut工具，CLI未找到chatcut登记，尚不能实际调用；不将此描述为未安装或未认证。托管接口不等同Desktop剪映草稿导出。"},
-    "intake": {"status": "implemented", "entry": "scripts/intake.py", "writesDraft": false},
-    "plan-compiler": {"status": "implemented", "entry": "scripts/compile_plan.py", "note": "人工计划与逐词转录编译为同一帧时间props；仅1倍速，不替代客户问询。"},
-    "remotion": {"status": "implemented-pilot", "configKey": "remotion.project", "entry": "../../scripts/render-live-preview.ps1", "note": "统一props已产出40.8s原声预览和11.6s独立透明层；连续单片段音频校时已验证。"},
-    "jianying-cli": {"status": "implemented-probe", "configKey": "jianying.bridgeProject", "note": "通过既有Bridge验证音效副本与无新增音效登记；不是已有CLI新增了通用视频组装命令。"},
-    "jianying-mcp": {"status": "external-existing-config-incomplete", "configKey": "jianying.runtimeManifest", "note": "本包没有重复启动MCP；当前应用入口缺JY_INSTALL_DIR，显式Bridge配置可读。"},
-    "jianying-draft": {"status": "implemented-structure-pending-ui", "configKey": "jianying.python", "entry": "../../workers/draft-adapter/worker.py", "note": "隔离初稿、内联素材、16可编辑字幕与首页登记回读通过；透明播放/保存重开/导出待UI验证。"},
-    "sound-design": {"status": "stub", "configKey": "soundDesign.skill", "note": "计划遵循已安装声音指南，执行待接入。"},
-    "talking-head-edit": {"status": "constraints-and-mapping-only", "note": "可映射已授权裁切，但本轮保留完整人声；重复句/停顿候选审核尚未实现。"},
-    "video-use": {"status": "implemented-local-transcription", "configKey": "videoUse.skillRoot", "entry": "scripts/transcribe.py", "note": "真实GPU转录与内容键缓存已通过；未启用自由设计/下载流程。"}
+    "local-dispatch": {
+      "status": "implemented-fixed-pilot",
+      "entry": "scripts/dispatch.py",
+      "actions": [
+        "remotion-still",
+        "create-isolated-draft"
+      ],
+      "note": "实际样图、复用与未发布副本已通过；绑定意图、输入/实现版本、相关审片和执行回执；非通用外部执行器。"
+    },
+    "chapters": {
+      "status": "implemented-insert-preview-and-cover-handoff-pilot",
+      "entry": "scripts/chapters.py",
+      "deliveryEntry": "scripts/chapter_delivery.py",
+      "note": "0.6句间独立插入1.8秒章节与短声音，原口播完整保留；42.6秒预览与9.8秒语境小样完成，用户认可音效和衔接。插入版尚未接入剪映草稿；旧cover四轨隔离草稿保留，UI待验收。非通用生产流水线。",
+      "insertionEntry": "scripts/prepare_chapter_insert.py"
+    },
+    "routing": {
+      "status": "implemented-planning-only",
+      "entry": "scripts/route.py",
+      "note": "根据实际能力快照选择外部后端；不执行、不把路线就绪当授权、不自动切换目的编辑器。"
+    },
+    "human-review": {
+      "status": "implemented-local-state",
+      "entry": "scripts/review.py",
+      "note": "候选与人的决定绑定范围、摘要及版本；本机dispatch已接相关检查，其他旧入口未全接。章节小样已有真实回复回执，不泛化为全片批准。"
+    },
+    "chatcut-hosted": {
+      "status": "external-installed-tools-not-loaded",
+      "note": "2026-10-01用户截图确认Codex已安装启用；本机manifest为1.10.14。当前旧会话无ChatCut工具，CLI未找到chatcut登记，尚不能实际调用；不将此描述为未安装或未认证。托管接口不等同Desktop剪映草稿导出。"
+    },
+    "intake": {
+      "status": "implemented",
+      "entry": "scripts/intake.py",
+      "writesDraft": false
+    },
+    "plan-compiler": {
+      "status": "implemented",
+      "entry": "scripts/compile_plan.py",
+      "note": "人工计划与逐词转录编译为同一帧时间props；仅1倍速，不替代客户问询。"
+    },
+    "remotion": {
+      "status": "implemented-pilot",
+      "configKey": "remotion.project",
+      "entry": "../../scripts/render-live-preview.ps1",
+      "note": "统一props已产出40.8s原声预览和11.6s独立透明层；连续单片段音频校时已验证。"
+    },
+    "jianying-cli": {
+      "status": "implemented-probe",
+      "configKey": "jianying.bridgeProject",
+      "note": "通过既有Bridge验证音效副本与无新增音效登记；不是已有CLI新增了通用视频组装命令。"
+    },
+    "jianying-mcp": {
+      "status": "external-connected-readonly-verified",
+      "configKey": "jianying.runtimeManifest",
+      "note": "2026-10-01本轮doctor、音效指南、缓存搜索真实成功，剪映当前未运行；旧安装目录缺项已不代表本轮状态。未重复启动服务或重新认证；草稿写入和UI另行验证。"
+    },
+    "jianying-draft": {
+      "status": "implemented-structure-pending-ui",
+      "configKey": "jianying.python",
+      "entry": "../../workers/draft-adapter/worker.py",
+      "note": "隔离初稿、内联素材、16可编辑字幕与首页登记回读通过；透明播放/保存重开/导出待UI验证。"
+    },
+    "sound-design": {
+      "status": "implemented-cached-chapter-preview-pilot",
+      "configKey": "soundDesign.skill",
+      "note": "调用既有声音skill和剪映MCP查本机缓存，准备1.1秒降音量与淡变的转场音效，严格落在独立章节区间。用户已认可真实语境小样；其他声音策略与通用草稿编排待接入。"
+    },
+    "talking-head-edit": {
+      "status": "constraints-and-mapping-only",
+      "note": "可映射已授权裁切，但本轮保留完整人声；重复句/停顿候选审核尚未实现。"
+    },
+    "video-use": {
+      "status": "implemented-local-transcription",
+      "configKey": "videoUse.skillRoot",
+      "entry": "scripts/transcribe.py",
+      "note": "真实GPU转录与内容键缓存已通过；未启用自由设计/下载流程。"
+    }
   }
 }

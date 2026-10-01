@@ -2,7 +2,7 @@
 
 把现有剪映桥接、Remotion、Video Use 与专项 skills 组合为一个本地制作插件。已完成视觉与问询、真实转录、统一帧时间计划，以及原声预览到独立剪映草稿的本机试验闭环；完整成片流水线逐步接入。
 
-本地0.5已接上受控本机动作、章节结构与审片；已确认章节配方接入完整预览和独立剪映草稿。批准绑定真实样片、范围和版本，变化只使相关批准失效；145项行为测试通过。仍没有通用外部执行器，旧入口未全部自动接审片检查。ChatCut已安装启用，当前旧会话工具尚未加载。总插件按需调用已有工具，分工见 [编排与人味确认](docs/editor-routing-and-human-review.md)，实际交接见 [章节交接](docs/chapter-delivery.md)。
+本地0.6已实现独立章节停顿：原口播完整保留，插入1.8秒图片动画与短音效，再接下一句。用户已认可新版音效和衔接；42.6秒完整候选与9.8秒语境小样已生成，157项行为测试通过。原有受控动作、章节结构、审片及连续原声cover草稿交接保留，插入版尚未接入剪映草稿。批准绑定真实样片、范围和版本，变化只使相关批准失效。ChatCut已安装启用，当前旧会话工具尚未加载；剪映MCP本轮只读能力调用成功。分工见 [编排与人味确认](docs/editor-routing-and-human-review.md)，新版见 [章节停顿与声音](docs/chapter-insertion.md)，旧交接见 [章节交接](docs/chapter-delivery.md)。
 
 公开仓库：[jedliuai/jed-video-system](https://github.com/jedliuai/jed-video-system)。当前是需要绑定本机环境的模块化原型，尚不是可跨机器直接安装的完整插件。
 
@@ -14,7 +14,9 @@
 
 ## 本轮可看的结果
 
-- `work/chapter-delivery/20261001-r2/preview.mp4`：40.8秒完整原声预览，已确认转场位于6.8–8.6秒；配套四轨剪映副本在隔离目录，未登记首页、应用验收待完成。
+- `work/chapter-insert/20261001-r2/sample.mp4`：9.8秒新版语境小样，用户已认可“口播暂停、章节动画＋短音效、接着说话”的音效和衔接。
+- `work/chapter-insert/20261001-r2/preview.mp4`：42.6秒完整候选，原40.8秒口播完整保留，章节与音效占独立1.8秒。整片尚未获审片接受，未生成插入版剪映草稿。
+- `work/chapter-delivery/20261001-r2/preview.mp4`：旧40.8秒连续原声cover预览，留作历史对照；配套四轨剪映副本在隔离目录，应用验收待完成。
 - `work/renders/jed-chapter-transition-sample.mp4`：8秒真实原声小样，用户已确认本版画风和节奏；该记录不等于整片批准。
 
 - `work/previews/jed-live-preview.mp4`：40.8秒真实原声样片，源码获取与演示信息跟随讲述，录屏完整保留。
@@ -49,12 +51,12 @@
 | --- | --- | --- |
 | Intake | 审核结果 → 条件问题 → 偏好与项目答案 → 约束 | 规则原型 |
 | Dispatcher | 操作意图、版本、相关审片 → 固定动作 → 回执/复用 | 已验证样图与未发布副本；非通用执行器 |
-| Chapters | 主模块边界、摘要、统一参考图 → 动效与独立草稿 | 已确认配方接入完整预览；剪映UI待验收 |
+| Chapters | 主模块边界、摘要、统一参考图 → 动效与源/输出时间映射 | 插入停顿与短声音小样获认可；cover草稿保留；新版草稿待接入 |
 | Motion library | 品牌、版式、动画、可参数化内容 | 三种场景与口播变体 |
 | Video Use adapter | 内容键缓存转录、逐词边界质量 | 真实GPU转录已接入 |
 | Plan compiler | 源秒时间、词anchor、字幕 → 共享帧props | 已实现30/60fps、仅1倍速 |
 | Jianying adapter | 隔离草稿组装、内联、首页登记 | 结构通过；应用验收待验证 |
-| Sound adapter | 调用既有Bridge音效副本流程 | 兼容探针已验证；客户生产编排待接入 |
+| Sound adapter | 外部声音skill与MCP缓存 → 有效截取、增益/淡变、章节区间 | 短转场真实预览获认可；通用客户生产编排待接入 |
 | Plugin packaging | 统一入口、skills、环境绑定与能力检查 | 骨架，不是完整可安装生产插件 |
 
 真实试验按顺序运行 `scripts/prepare-live-source.ps1`、`scripts/render-live-preview.ps1`、`scripts/create-live-draft.ps1`。最后一个默认隔离保存，显式加 `-Publish` 才登记新草稿首页。配置来自未提交的 `config/local.json`；人工计划位于 `work/plans/live-edit-plan.json`。先完成剪映应用验收，再连接自动规划与精修。说明见 `docs/production-pilot.md`、`docs/compatibility-matrix.md` 和 `docs/plugin-design.md`。

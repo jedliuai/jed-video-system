@@ -48,6 +48,8 @@ def main():
             raise ValueError('job-id is too long for the existing draft name contract')
         props_path = local(args.props)
         props = read(props_path)
+        if props.get('timelineMode') == 'chapter-insert':
+            raise ValueError('Inserted chapter candidates use prepare_chapter_insert.py; this cover-only draft handoff cannot consume them')
         review_path = local(args.review_state)
         acceptance = accepted_recipe(read(review_path), args.candidate_id, props_path, props)
         if props.get('fps') != 30 or props.get('sourceSrc') != 'live-source.mp4':

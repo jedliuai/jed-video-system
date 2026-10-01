@@ -5,7 +5,7 @@ description: Orchestrate Jed video production using available external editing t
 
 # Jed Video System
 
-本插件负责审核、路由、项目约束、时间计划和人工审片记录。ChatCut、剪映MCP/CLI、Remotion、Video Use、声音skill、agy保持外部依赖；进入相应环节才发现工具、读其skill并调用，不复制整个第三方插件、认证或服务。0.5提供路由、审片、受控本机动作及已确认章节配方的本机交接，仍无通用自动执行器，不能把路线选择当成已完成编辑。详细分工见 [orchestration.md](references/orchestration.md)；实际运行本机试验时读 [dispatch.md](references/dispatch.md)。
+本插件负责审核、路由、项目约束、时间计划和人工审片记录。ChatCut、剪映MCP/CLI、Remotion、Video Use、声音skill、agy保持外部依赖；进入相应环节才发现工具、读其skill并调用，不复制整个第三方插件、认证或服务。0.6增加章节独立停顿与短音效预览；原有路由、审片、受控本机动作及cover草稿交接保留。仍无通用自动执行器，不能把路线选择当成已完成编辑。详细分工见 [orchestration.md](references/orchestration.md)；实际运行本机试验时读 [dispatch.md](references/dispatch.md)。
 
 每个项目只有一个当前主时间线。固定品牌动效优先Remotion；ChatCut连接可用时优先试验脚本精修、字幕和可编辑审片；Video Use本地转录、声音策略和剪映交付保留。ChatCut向本地输出片段时须有实测源时间映射；没有映射就留在单编辑器闭环。托管ChatCut不能冒充Desktop的剪映草稿导出。
 
@@ -18,6 +18,8 @@ description: Orchestrate Jed video production using available external editing t
 使用固定的组件与场景，内容通过 props 输入；画面样式目前在项目 `motion-lab` 中试验。图表例子若是合成数据必须标明，正式任务不得把它当作客户真实数据。
 
 分模块讲述时读取 [chapters.md](references/chapters.md)：按视频大体结构找主要边界并概括模块，不假设每段都有起因和总结。先做统一画风的真实转场小样；图像工具负责主题底图，Remotion或可用编辑器负责可编辑数字/标题与轻动效。首次确认画风、时长、声音连续或停顿，再复用同配方。录屏内部的小操作不自动加整屏转场。
+
+Jed本项目现已明确并通过真实小样确认：浅色剪纸加蓝色点缀、1.8秒独立章节停顿、只有短转场音效、随后接回口播。复用该偏好，不重问要不要暂停；在已核查的句间插入新时段，完整保留源语音，字幕和动效按同一映射后移。不要把源语音直接静音掉。新的声音或不同节奏只重审受影响的带前后语境小样；其他客户不自动继承Jed偏好。插入预览入口及其草稿限制见章节reference。
 
 能力边界、问询键名和路径配置见 [workflow.md](references/workflow.md) 与插件 `adapters/registry.json`。0.2 本机阶段已可执行转录、人工计划的帧时间编译、真实原声预览、独立透明动效与隔离剪映草稿；只在原声明范围内操作。入口依赖绑定的项目根 `scripts/`、`motion-lab/` 与 `workers/`，尚未打包成脱离工作区的通用安装包。
 
@@ -35,4 +37,4 @@ description: Orchestrate Jed video production using available external editing t
 
 新dispatch已把两项本机动作接到意图、版本和相关审片检查；其他0.2入口及章节渲染仍需总控在调用前检查。不宣称已把所有旧脚本接到gate或已完成跨编辑器生产。导出、渲染和公开发布按现有明确授权分别处理；具体交付已授权且版本范围不变时不再重复询问。上游改动给用户转交提示词，ChatCut和Remotion官方插件保持原样。
 
-素材Alpha解码、MediaInfo解析、草稿回读、首页登记、应用内播放、保存重开和原生导出分别记录。本轮Windows UI runtime不可用，不能把结构通过说成应用播放通过。当前安装的MCP入口缺安装目录环境，显式Bridge配置可用；不要为此重写codec或启动重复MCP。现有工具通过本地路径调用，禁止为了包装插件再开发同一底层能力。
+素材Alpha解码、MediaInfo解析、草稿回读、首页登记、应用内播放、保存重开和原生导出分别记录。Windows UI验收尚未完成，不能把结构通过说成应用播放通过。2026-10-01本轮剪映MCP doctor、音效指南和本机缓存查询均已成功，旧的安装目录缺项记录不代表当前故障；使用已有连接，调用前刷新状态。现有工具通过本地路径调用，禁止为了包装插件再开发同一底层能力。

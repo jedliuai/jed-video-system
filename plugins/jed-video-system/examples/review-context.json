@@ -1,0 +1,28 @@
+{
+  "operations": ["transcribe", "compile_plan", "render_preview"],
+  "speechChanges": {
+    "deletesMeaningfulContent": false,
+    "reordersStatements": false,
+    "changesClaims": false,
+    "changesPacing": true,
+    "ambiguousMeaning": false
+  },
+  "visualChanges": {
+    "newStyle": false,
+    "newBroll": false,
+    "changesEstablishedStyle": false,
+    "affectsPersonRepresentation": false,
+    "newMotionPattern": true,
+    "firstRealFootageApplication": true
+  },
+  "audioChanges": {
+    "newMusic": false,
+    "newSfxStyle": false,
+    "changesMood": false
+  },
+  "majorStructureChanged": false,
+  "combinedNewElements": false,
+  "reviewWholeFlow": false,
+  "delivery": {"requested": false, "reviewRequested": false},
+  "artifacts": {}
+}

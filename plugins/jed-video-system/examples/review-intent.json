@@ -1,0 +1,10 @@
+{
+  "authorizedMechanicalOperations": [
+    "probe_media",
+    "transcribe",
+    "align_transcript",
+    "compile_plan",
+    "render_preview",
+    "export_local_preview"
+  ]
+}

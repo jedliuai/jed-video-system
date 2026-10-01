@@ -1,0 +1,16 @@
+{
+  "templateNotice": "这是未批准的候选模板。先生成、自检并展示真实样片，再填实际文件路径和SHA-256；零摘要不是证据，CLI会拒绝不匹配文件。",
+  "candidateId": "talking-head-motion-r1",
+  "scope": "visual_sample",
+  "scopeId": "talking-head-intro",
+  "revision": "preview-r1",
+  "contentRevision": "script-r1",
+  "artifactDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "artifactKind": "video",
+  "locator": "work/renders/replace-with-actual-sample.mp4",
+  "patternId": "A-direct-overlay",
+  "operationVersion": "overlay-engine-r1",
+  "operations": ["add_overlay"],
+  "coverage": "sample",
+  "dependsOn": []
+}

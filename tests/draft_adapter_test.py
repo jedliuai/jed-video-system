@@ -2,6 +2,9 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from copy import deepcopy
+from unittest.mock import patch
+import tempfile
 
 SPEC = importlib.util.spec_from_file_location("jed_draft_worker", Path(__file__).parents[1] / "workers/draft-adapter/worker.py")
 worker = importlib.util.module_from_spec(SPEC)
@@ -77,6 +80,74 @@ class DraftBoundaries(unittest.TestCase):
     def test_preview_rejects_sound_field_before_external_import(self):
         with self.assertRaises(ValueError):
             worker.preview({"schemaVersion": "jed-draft-preview/1", "sound": "unwanted.wav"})
+
+    def chapter_props(self):
+        return {'fps': 30, 'durationInFrames': 300,
+            'clips': [{'sourceStartFrame': 0, 'outputStartFrame': 0, 'durationInFrames': 300}],
+            'chapterTransitions': [{'id': 'demo', 'outputStartFrame': 60,
+                'durationInFrames': 54, 'audioPolicy': 'continue_source'}]}
+
+    def test_chapter_track_rejects_overlap_and_audio_pause(self):
+        props = self.chapter_props()
+        props['chapterTransitions'].append({**props['chapterTransitions'][0], 'id': 'another'})
+        with self.assertRaisesRegex(ValueError, 'non-overlapping'):
+            worker.validate_preview(props)
+        props = self.chapter_props()
+        props['chapterTransitions'][0]['audioPolicy'] = 'pause_source'
+        with self.assertRaisesRegex(ValueError, 'source audio continuing'):
+            worker.validate_preview(props)
+
+    def test_missing_chapter_media_is_not_silently_dropped(self):
+        with self.assertRaisesRegex(ValueError, 'exactly one'):
+            worker.chapter_media(self.chapter_props(), {})
+
+    def test_orphan_chapter_asset_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'IDs differ'):
+            worker.chapter_media(self.chapter_props(), {'chapterMedia': [{'id': 'unknown'}]})
+
+    def chapter_media_fixture(self, directory):
+        path = Path(directory) / 'chapter.mov'
+        path.write_bytes(b'synthetic alpha fixture')
+        props = self.chapter_props()
+        spec = {'chapterMedia': [{'id': 'demo', 'path': str(path),
+            'sha256': worker.sha256(path), 'eventDigest': worker.chapter_event_digest(props['chapterTransitions'][0])}]}
+        info = {'durationUs': 1_800_000, 'video': {'codec_name': 'prores', 'pix_fmt': 'yuva444p12le',
+            'width': 1920, 'height': 1080, 'avg_frame_rate': '30/1'}, 'streams': []}
+        return props, spec, info
+
+    def test_alpha_asset_keeps_exact_target_frame_span(self):
+        with tempfile.TemporaryDirectory() as directory:
+            props, spec, info = self.chapter_media_fixture(directory)
+            with patch.object(worker, 'metadata', return_value=info):
+                checked = worker.chapter_media(props, spec)
+            event = checked[0]['event']
+            self.assertEqual(worker.span_us(event['outputStartFrame'], event['durationInFrames'], 30),
+                             {'start': 2_000_000, 'duration': 1_800_000})
+
+    def test_alpha_media_digest_and_event_revision_must_match(self):
+        with tempfile.TemporaryDirectory() as directory:
+            props, spec, info = self.chapter_media_fixture(directory)
+            props['chapterTransitions'][0]['durationInFrames'] += 1
+            with self.assertRaisesRegex(ValueError, 'render receipt'):
+                worker.chapter_media(props, spec)
+            props['chapterTransitions'][0]['durationInFrames'] -= 1
+            Path(spec['chapterMedia'][0]['path']).write_bytes(b'changed')
+            with self.assertRaisesRegex(ValueError, 'render receipt'):
+                worker.chapter_media(props, spec)
+
+    def test_wrong_fps_missing_alpha_and_short_asset_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            props, spec, info = self.chapter_media_fixture(directory)
+            for change in ('fps', 'alpha', 'duration'):
+                invalid = deepcopy(info)
+                if change == 'fps':
+                    invalid['video']['avg_frame_rate'] = '60/1'
+                elif change == 'alpha':
+                    invalid['video']['pix_fmt'] = 'yuv444p12le'
+                else:
+                    invalid['durationUs'] = 500_000
+                with self.subTest(change=change), patch.object(worker, 'metadata', return_value=invalid), self.assertRaises(ValueError):
+                    worker.chapter_media(props, spec)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:capabilities:0.1.0",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object", "additionalProperties": false,
+    "required": ["connected", "features", "evidence"],
+    "properties": {
+      "connected": {"type": "boolean"},
+      "features": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+      "evidence": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source", "checkedAt"],
+        "properties": {"source": {"type": "string", "minLength": 1}, "checkedAt": {"type": ["string", "null"]}}
+      }
+    }
+  }
+}

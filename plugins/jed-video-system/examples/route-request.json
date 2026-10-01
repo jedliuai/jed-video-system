@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "0.1.0",
+  "projectId": "synthetic-routing-example",
+  "destination": "jianying",
+  "stages": ["transcribe", "motion", "assemble", "verify"],
+  "reviewContext": {
+    "operations": ["new_motion_sample"],
+    "visualChanges": {"newStyle": true},
+    "artifacts": {}
+  }
+}

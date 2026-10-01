@@ -1,15 +1,18 @@
 param(
   [string]$LocalConfig = (Join-Path $PSScriptRoot '../config/local.json'),
+  [string]$OutputRoot = (Join-Path $PSScriptRoot '../work/compatibility'),
   [switch]$Publish
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path $PSScriptRoot -Parent
+$OutputRoot = [IO.Path]::GetFullPath($OutputRoot)
+New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
 $taskConfig = Get-Content -LiteralPath $LocalConfig -Raw | ConvertFrom-Json
 $taskDate = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId([DateTime]::UtcNow,'China Standard Time').ToString('yyyyMMdd')
 $taskName = 'jed-probe-live-' + $taskDate + '-' + [guid]::NewGuid().ToString('N').Substring(0,8)
 $taskSpec = @{
   schemaVersion='jed-draft-preview/1'; bridgeProject=$taskConfig.jianying.bridgeProject
-  bridgeConfig=$taskConfig.jianying.bridgeConfig; outputRoot=(Join-Path $taskRoot 'work/compatibility/draft-builds')
+  bridgeConfig=$taskConfig.jianying.bridgeConfig; outputRoot=(Join-Path $OutputRoot 'draft-builds')
   name=$taskName; source=(Join-Path $taskRoot 'motion-lab/public/live-source.mp4')
   overlay=(Join-Path $taskRoot 'work/renders/talking-head-overlay.mov')
   font=(Join-Path $taskRoot 'motion-lab/public/fonts/jed-sans-regular.ttf')
@@ -20,8 +23,8 @@ foreach ($taskKey in @('source','overlay','font','renderProps')) {
 }
 $taskProps = Get-Content -LiteralPath $taskSpec.renderProps -Raw | ConvertFrom-Json
 $taskSpec.overlayDurationFrames = [int](($taskProps.overlays | ForEach-Object { $_.outputStartFrame + $_.durationInFrames } | Measure-Object -Maximum).Maximum)
-$taskInput = Join-Path $taskRoot ('work/compatibility/'+$taskName+'-input.json')
-$taskResult = Join-Path $taskRoot ('work/compatibility/'+$taskName+'-result.json')
+$taskInput = Join-Path $OutputRoot ($taskName+'-input.json')
+$taskResult = Join-Path $OutputRoot ($taskName+'-result.json')
 $taskSpec | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $taskInput -Encoding utf8
 $taskArguments = @((Join-Path $taskRoot 'workers/draft-adapter/worker.py'),'preview','--input',$taskInput)
 if ($Publish) { $taskArguments += '--publish' }

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:routing-request:0.1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "projectId", "destination", "stages"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "projectId": {"type": "string", "minLength": 1},
+    "destination": {"enum": ["jianying", "chatcut", "preview"]},
+    "motionMode": {"enum": ["fixed", "editable"]},
+    "stages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["transcribe", "speech_edit", "captions", "motion", "sound", "assemble", "verify", "export"]}},
+    "backendOverrides": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+    "reviewContext": {"type": "object"}
+  }
+}

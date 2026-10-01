@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "0.1.0",
+  "jobId": "prepare-one-real-frame-r1",
+  "projectId": "your-local-project",
+  "action": "remotion-still",
+  "phase": "prepare",
+  "localConfig": "config/local.json",
+  "renderProps": "work/plans/live-render-props.json",
+  "frame": 180,
+  "intent": {"authorizedActions": ["remotion-still"]}
+}

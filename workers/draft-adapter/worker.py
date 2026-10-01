@@ -279,15 +279,58 @@ def validate_preview(props):
         if not isinstance(caption.get("text"), str) or not caption["text"].strip():
             raise ValueError("empty or non-text caption")
         previous_end = end
+    previous_end = 0
+    ids = set()
+    for event in props.get('chapterTransitions', []):
+        start, length = event.get('outputStartFrame'), event.get('durationInFrames')
+        if type(start) is not int or type(length) is not int or start < previous_end or length < 1 or start + length > total:
+            raise ValueError('chapter transitions must be ordered, non-overlapping and inside the output')
+        if not isinstance(event.get('id'), str) or not event['id'] or event['id'] in ids:
+            raise ValueError('chapter IDs must be distinct')
+        if event.get('audioPolicy') != 'continue_source':
+            raise ValueError('chapter draft only covers a bridge with source audio continuing')
+        ids.add(event['id'])
+        previous_end = start + length
     return props
 
 
+def chapter_event_digest(event):
+    return hashlib.sha256(json.dumps(event, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')).hexdigest()
+
+
+def chapter_media(props, spec):
+    events = props.get('chapterTransitions', [])
+    supplied = spec.get('chapterMedia', [])
+    if not isinstance(supplied, list) or len(supplied) != len(events):
+        raise ValueError('Every chapter event needs exactly one rendered asset')
+    ids = [item.get('id') for item in supplied]
+    if len(set(ids)) != len(ids) or set(ids) != {event['id'] for event in events}:
+        raise ValueError('chapter media IDs differ from the timeline')
+    by_id = {item['id']: item for item in supplied}
+    checked = []
+    for event in events:
+        item = by_id[event['id']]
+        path = existing_file(item['path'])
+        if item.get('eventDigest') != chapter_event_digest(event) or sha256(path) != item.get('sha256'):
+            raise ValueError('chapter asset or event differs from its render receipt')
+        info = metadata(path)
+        video = info['video'] or {}
+        required = span_us(0, event['durationInFrames'], props['fps'])['duration']
+        if info['durationUs'] + 1000 < required or video.get('codec_name') != 'prores' or not video.get('pix_fmt', '').startswith('yuva') or video.get('width') != 1920 or video.get('height') != 1080:
+            raise ValueError('chapter asset needs matching-duration 1920x1080 ProRes Alpha')
+        if Fraction(video.get('avg_frame_rate', '0/1')) != props['fps']:
+            raise ValueError('chapter asset frame rate differs from timeline')
+        checked.append({'event': event, 'path': path, 'metadata': info})
+    return checked
+
+
 def preview(spec, publish=False):
-    """No additional audio: three-track real preview with the authoritative captions."""
+    """Original voice, editable captions and optional upper chapter Alpha track."""
     if spec.get("schemaVersion") != "jed-draft-preview/1" or "sound" in spec:
         raise ValueError("preview requires jed-draft-preview/1 and does not accept a sound asset")
     props_path = existing_file(spec["renderProps"])
     props = validate_preview(read_json(props_path))
+    chapters = chapter_media(props, spec)
     normalized = {**spec, "schemaVersion": "jed-draft-probe/1", "fps": props["fps"], "durationFrames": props["durationInFrames"]}
     validate_spec(normalized)
     Bridge, draft, bridge_config = import_bridge(spec)
@@ -314,6 +357,8 @@ def preview(spec, publish=False):
         base_track = script.append_track(draft.TrackSpec(draft.TrackType.video, "Jed · Original footage and voice"))
         overlay_track = script.insert_track(draft.TrackSpec(draft.TrackType.video, "Jed · Approved A overlay"), over_track=base_track)
         caption_track = script.insert_track(draft.TrackSpec(draft.TrackType.text, "Jed · Editable original captions"), over_track=overlay_track)
+        if chapters:
+            chapter_track = script.insert_track(draft.TrackSpec(draft.TrackType.video, "Jed · Chapter transitions"), over_track=caption_track)
         script.add_segment(draft.VideoSegment(str(source), draft.Timerange(0, duration), source_timerange=draft.Timerange(0, duration), volume=1), base_track)
         script.add_segment(draft.VideoSegment(str(overlay), draft.Timerange(0, overlay_duration), volume=0), overlay_track)
         for caption in props.get("captions", []):
@@ -321,6 +366,11 @@ def preview(spec, publish=False):
             script.add_segment(draft.TextSegment(caption["text"], draft.Timerange(**timerange), font_path=str(font),
                 style=draft.TextStyle(size=5, color=(1, 1, 1), align=1), border=draft.TextBorder(width=8),
                 clip_settings=draft.ClipSettings(transform_y=-.8)), caption_track)
+        for item in chapters:
+            event = item['event']
+            target_range = span_us(event['outputStartFrame'], event['durationInFrames'], fps)
+            script.add_segment(draft.VideoSegment(str(item['path']), draft.Timerange(**target_range),
+                source_timerange=draft.Timerange(0, target_range['duration']), volume=0), chapter_track)
         script.save(inline_materials=True)
         baseline = stage / baseline_name
         bridge = Bridge({**bridge_config, "draft_root": str(stage), "work_root": str(invocation / "bridge-work")})
@@ -358,12 +408,16 @@ def preview(spec, publish=False):
             "canvas": {"width": 1920, "height": 1080}, "sourceDraftModified": False,
             "fps": fps, "durationFrames": duration_frames, "durationUs": duration, "overlayDurationFrames": overlay_frames,
             "renderProps": str(props_path), "renderPropsSha256": sha256(props_path), "addedSoundEffects": 0,
+            "chapterTransitions": [{**item['event'], 'mediaSha256': sha256(item['path']),
+                'eventDigest': chapter_event_digest(item['event']), 'editorTitleEditable': False,
+                'titleEditableInRemotionProps': True} for item in chapters],
             "originalVoice": {"source": str(source), "volume": 1, "sourceStartUs": 0},
             "captionStyle": {"pixelSizeIntent": 40, "editorSize": 5, "white": True, "blackBorderWidth": 8,
                 "bottomPixelIntent": 88, "transformY": -.8, "font": str(font), "pixelAccuracy": "pending_ui_verification"},
             "bridgeManifest": str(build_dir / "manifest.json"),
             "media": [{"role": role, "path": str(path), "sha256": sha256(path), "metadata": info}
-                      for role, path, info in [("base", source, source_info), ("overlay", overlay, overlay_info)]],
+                      for role, path, info in [("base", source, source_info), ("overlay", overlay, overlay_info)] +
+                          [("chapter:" + item['event']['id'], item['path'], item['metadata']) for item in chapters]],
             "tracks": [{"id": t["id"], "name": t.get("name"), "type": t["type"],
                 "segments": [{"id": s["id"], "materialId": s["material_id"], "sourceUs": s.get("source_timerange"),
                     "targetUs": s["target_timerange"], "renderIndex": s.get("render_index")} for s in t["segments"]]} for t in content["tracks"]],

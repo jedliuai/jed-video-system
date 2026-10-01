@@ -1,0 +1,7 @@
+{
+  "video-use": {"connected": false, "features": [], "evidence": {"source": "Example only; replace with current runtime observation", "checkedAt": null}},
+  "remotion": {"connected": false, "features": [], "evidence": {"source": "Example only; not runtime proof", "checkedAt": null}},
+  "jianying-draft": {"connected": false, "features": [], "evidence": {"source": "Example only; not runtime proof", "checkedAt": null}},
+  "jianying-ui": {"connected": false, "features": [], "evidence": {"source": "Example only; not runtime proof", "checkedAt": null}},
+  "chatcut-hosted": {"connected": false, "features": [], "evidence": {"source": "Example only; installing skills does not establish a connection", "checkedAt": null}}
+}

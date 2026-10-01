@@ -5,5 +5,19 @@
     "backgroundTreatment": "original",
     "overlayPanels": false,
     "source": "explicit-user-preference"
+  },
+  "chapterTransitions": {
+    "styleId": "jed-paper-blue",
+    "styleRevision": "r1",
+    "artDirection": "light-paper-cut-with-blue-and-small-candy-accents",
+    "durationInFrames": 54,
+    "fps": 30,
+    "placement": "cover_bridge",
+    "audioPolicy": "continue_source",
+    "editableTitleAndNumber": true,
+    "source": "explicit-user-sample-acceptance",
+    "scope": "jed-live-pilot-sample-recipe",
+    "candidateId": "chapter-demo-sample-r1",
+    "localReviewState": "work/chapters/review-state-r1.json"
   }
 }

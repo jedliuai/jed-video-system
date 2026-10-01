@@ -2,6 +2,8 @@
 
 把现有剪映桥接、Remotion、Video Use 与专项 skills 组合为一个本地制作插件。已完成视觉与问询、真实转录、统一帧时间计划，以及原声预览到独立剪映草稿的本机试验闭环；完整成片流水线逐步接入。
 
+本地0.5已接上受控本机动作、章节结构与审片；已确认章节配方接入完整预览和独立剪映草稿。批准绑定真实样片、范围和版本，变化只使相关批准失效；145项行为测试通过。仍没有通用外部执行器，旧入口未全部自动接审片检查。ChatCut已安装启用，当前旧会话工具尚未加载。总插件按需调用已有工具，分工见 [编排与人味确认](docs/editor-routing-and-human-review.md)，实际交接见 [章节交接](docs/chapter-delivery.md)。
+
 公开仓库：[jedliuai/jed-video-system](https://github.com/jedliuai/jed-video-system)。当前是需要绑定本机环境的模块化原型，尚不是可跨机器直接安装的完整插件。
 
 仓库包含源码、JSON Schema、配置模板、测试和阶段文档。个人素材、参考媒体、字体、渲染结果、转录缓存、实际剪辑计划和本机配置保留在本地；下文中的 `work/` 产物和剪映工程名是已完成的本机验证记录，克隆仓库不会附带这些文件。真实素材流程还需要自行准备输入计划和可用的 Video Use / Jianying Bridge 环境。
@@ -11,6 +13,9 @@
 在项目根运行 `python -m unittest discover -s tests -p '*_test.py'`；在 `motion-lab` 安装依赖后运行 `npm run lint`。基础行为测试不要求个人素材或剪映安装，实际转录、渲染与草稿试验另需本机依赖。
 
 ## 本轮可看的结果
+
+- `work/chapter-delivery/20261001-r2/preview.mp4`：40.8秒完整原声预览，已确认转场位于6.8–8.6秒；配套四轨剪映副本在隔离目录，未登记首页、应用验收待完成。
+- `work/renders/jed-chapter-transition-sample.mp4`：8秒真实原声小样，用户已确认本版画风和节奏；该记录不等于整片批准。
 
 - `work/previews/jed-live-preview.mp4`：40.8秒真实原声样片，源码获取与演示信息跟随讲述，录屏完整保留。
 - 剪映首页 `jed-probe-live-20261001-a726bdf2`：底片、11.6秒透明层和16条可编辑字幕分轨保存；应用播放和保存重开待验证。
@@ -38,9 +43,13 @@
 
 ## 模块边界
 
+新增插件的接入调查见 [ChatCut 环节与分工](docs/chatcut-integration-research.md)。推荐优先验证口播脚本精修、字幕与可编辑预览；当前 ChatCut 编辑接口尚未在本轮会话可用，未将其标为已接入生产。
+
 | 模块 | 职责 | 当前阶段 |
 | --- | --- | --- |
 | Intake | 审核结果 → 条件问题 → 偏好与项目答案 → 约束 | 规则原型 |
+| Dispatcher | 操作意图、版本、相关审片 → 固定动作 → 回执/复用 | 已验证样图与未发布副本；非通用执行器 |
+| Chapters | 主模块边界、摘要、统一参考图 → 动效与独立草稿 | 已确认配方接入完整预览；剪映UI待验收 |
 | Motion library | 品牌、版式、动画、可参数化内容 | 三种场景与口播变体 |
 | Video Use adapter | 内容键缓存转录、逐词边界质量 | 真实GPU转录已接入 |
 | Plan compiler | 源秒时间、词anchor、字幕 → 共享帧props | 已实现30/60fps、仅1倍速 |
@@ -49,3 +58,5 @@
 | Plugin packaging | 统一入口、skills、环境绑定与能力检查 | 骨架，不是完整可安装生产插件 |
 
 真实试验按顺序运行 `scripts/prepare-live-source.ps1`、`scripts/render-live-preview.ps1`、`scripts/create-live-draft.ps1`。最后一个默认隔离保存，显式加 `-Publish` 才登记新草稿首页。配置来自未提交的 `config/local.json`；人工计划位于 `work/plans/live-edit-plan.json`。先完成剪映应用验收，再连接自动规划与精修。说明见 `docs/production-pilot.md`、`docs/compatibility-matrix.md` 和 `docs/plugin-design.md`。
+
+ChatCut和Remotion官方插件按用户要求保持原样。需要用户转交其他项目的最小调整提示词见 [上游协作提示词](docs/upstream-handoff-prompts.md)，当前无必须阻塞本机试验的上游改动。

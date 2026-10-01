@@ -2,6 +2,8 @@
 
 `audit -> pending questions / blockers -> intake intent -> explicitly authored edit-plan -> frame compiler -> validated adapters`
 
+0.5包含外部路由与人工小样审核，见 [orchestration.md](orchestration.md)，本机两项受控动作见 [dispatch.md](dispatch.md)，结构、章节转场与已确认配方的独立交接见 [chapters.md](chapters.md)。总控流程为audit → 相关范围授权 → 只读route → 候选/小样自检 → 人工接受适用范围 → 实际调度 → 验证。原0.2其他入口仍可按已有人工计划授权使用，尚未全部自动消费review记录；intake的productionAdaptersReady=false保持不变。
+
 从插件根目录运行：
 
 ```powershell

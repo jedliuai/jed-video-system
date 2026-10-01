@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:dispatch-request:0.1.0",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "jobId", "projectId", "action", "phase", "localConfig", "renderProps", "intent"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "jobId": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,79}$"},
+    "projectId": {"type": "string", "minLength": 1},
+    "action": {"enum": ["remotion-still", "create-isolated-draft"]},
+    "phase": {"enum": ["prepare", "reviewed-apply"]},
+    "localConfig": {"type": "string", "minLength": 1},
+    "renderProps": {"type": "string", "minLength": 1},
+    "frame": {"type": "integer", "minimum": 0},
+    "intent": {"type": "object", "additionalProperties": false, "required": ["authorizedActions"], "properties": {"authorizedActions": {"type": "array", "uniqueItems": true, "items": {"enum": ["remotion-still", "create-isolated-draft"]}}}},
+    "expectedInputHashes": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "reviewState": {"type": "string", "minLength": 1},
+    "reviewCandidateId": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {"if": {"properties": {"phase": {"const": "reviewed-apply"}}}, "then": {"required": ["reviewState", "reviewCandidateId"], "properties": {"action": {"const": "create-isolated-draft"}}}},
+    {"if": {"properties": {"action": {"const": "remotion-still"}}}, "then": {"properties": {"phase": {"const": "prepare"}}}}
+  ]
+}

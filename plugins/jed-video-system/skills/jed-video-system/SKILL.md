@@ -1,22 +1,38 @@
 ---
 name: jed-video-system
-description: Organize a Jed video project with conditional client preferences, content-addressed local transcription, shared frame timing, reusable motion scenes, and isolated Jianying draft creation. Use this workspace workflow while keeping editor playback verification separate from structural checks.
+description: Orchestrate Jed video production using available external editing tools, with conditional preferences, semantic chapter transitions and scoped human review of speech, visuals and sound. Keep tool availability, user acceptance and editor verification separate.
 ---
 
 # Jed Video System
 
+本插件负责审核、路由、项目约束、时间计划和人工审片记录。ChatCut、剪映MCP/CLI、Remotion、Video Use、声音skill、agy保持外部依赖；进入相应环节才发现工具、读其skill并调用，不复制整个第三方插件、认证或服务。0.5提供路由、审片、受控本机动作及已确认章节配方的本机交接，仍无通用自动执行器，不能把路线选择当成已完成编辑。详细分工见 [orchestration.md](references/orchestration.md)；实际运行本机试验时读 [dispatch.md](references/dispatch.md)。
+
+每个项目只有一个当前主时间线。固定品牌动效优先Remotion；ChatCut连接可用时优先试验脚本精修、字幕和可编辑审片；Video Use本地转录、声音策略和剪映交付保留。ChatCut向本地输出片段时须有实测源时间映射；没有映射就留在单编辑器闭环。托管ChatCut不能冒充Desktop的剪映草稿导出。
+
 先审核素材与转录，不要把输入文件名当作内容分类。区分口播、教程录屏、混合段与分类不确定的段。时间与置信度写进 audit，不猜测已确认的客户意见。
 
-运行 `scripts/intake.py`，使用 `examples/audit-mixed.json` 了解输入结构。项目答案高于用户明确偏好；界面里的推荐值不等于回答。`status` 不是 `ready_for_planning` 时，只处理输出的 `questions` 与 `blockers`，不能发出生产任务。
+完整新制作或改变制作范围时运行 `scripts/intake.py`，使用 `examples/audit-mixed.json` 了解输入结构。项目答案高于用户明确偏好；界面里的推荐值不等于回答。完整制作的`status`不是`ready_for_planning`时，不发出依赖缺失约束的生产任务，但继续独立的检查和获授权候选准备。只修错字、调整一个已指定元素或导出既定版本等窄任务继承原工程约束，不强迫补齐整个intake问卷；本次未用的新声音/B-roll等保持关闭，不推断新的偏好。当前intake脚本仍是完整问询协议，这种范围判断由总skill负责。
 
 口播与录屏共存时，根据实际审核结果判断是否需要询问录屏 B-roll。已明确的 `broll.screen_recording=false` 可以复用，不重复问。禁用 B-roll 时不搜索或下载 B-roll；重点圈画、缩放、步骤标注仍属于独立的 Motion 选择。口播的 B-roll 也要经过选择，不能自动强制添加。
 
 使用固定的组件与场景，内容通过 props 输入；画面样式目前在项目 `motion-lab` 中试验。图表例子若是合成数据必须标明，正式任务不得把它当作客户真实数据。
 
+分模块讲述时读取 [chapters.md](references/chapters.md)：按视频大体结构找主要边界并概括模块，不假设每段都有起因和总结。先做统一画风的真实转场小样；图像工具负责主题底图，Remotion或可用编辑器负责可编辑数字/标题与轻动效。首次确认画风、时长、声音连续或停顿，再复用同配方。录屏内部的小操作不自动加整屏转场。
+
 能力边界、问询键名和路径配置见 [workflow.md](references/workflow.md) 与插件 `adapters/registry.json`。0.2 本机阶段已可执行转录、人工计划的帧时间编译、真实原声预览、独立透明动效与隔离剪映草稿；只在原声明范围内操作。入口依赖绑定的项目根 `scripts/`、`motion-lab/` 与 `workers/`，尚未打包成脱离工作区的通用安装包。
+
+`route.py --request --capabilities`只规划外部后端；能力快照须来自本次实际发现/读回，安装包名不是可调用证据，快照也不替代调用前刷新。`route_ready`不等于执行授权或人工批准。`review.py`保存本地候选、小样请求和人的决策；获授权的隔离样片准备可以先执行，不等尚未存在的效果获批。正式应用、批量扩展或交付前检查与本步骤相关的gate，不能用recommended、沉默、测试通过或agent评价伪造批准。
+
+先判断哪些工作需要人味确认：语义删剪/重排或剪后自然节奏、新组件或首次真实底片上的动效、新B-roll和事实画面、首次或明显改变的声音策略，以及用户要求审阅的整片。先自检，再展示带上下文的真实小样：删剪要能试听前后，动效要看完整出现/停留/退出，声音要带原口播听。只有静态排版可先看图；未生成样片时继续准备，不能用空请求让客户批准想象中的效果。
+
+已选A的原画面叠层、录屏不加B-roll无需重问。授权范围内的机械整理、转录、候选准备、校验和已确认配方的同类应用直接继续；每次工具调用不设置一次确认。批准记录绑定产物摘要、范围、修订和操作版本；批量只能复用相同范式与批准范围，改变结构/节奏/效果后局部失效。要求先审的步骤不得由“继续”泛化成尚未看到的新效果已获批准；明确授权端到端执行则按其范围处理，不额外制造固定审批关卡。
+
+人的回复绑定当时展示的requestId和版本。请求已过期时，延迟到达的“同意”不能改绑最新版；展示当前受影响样片后再收取其决定。不重问仍有效的长期偏好。
 
 `compile_plan.py --plan --transcript --output` 只接受来源SHA匹配的逐词转录。预览与独立动效共用输出props，不各写一套cue。沿用已选A的原画面叠层；录屏B-roll为false时不搜索下载。人工计划需要已有会话授权；它不能把尚未回答的客户偏好自动升级为生产计划。
 
 本机完整试验入口是项目根 `scripts/prepare-live-source.ps1`、`scripts/render-live-preview.ps1`、`scripts/create-live-draft.ps1`。最后一个默认只生成独立草稿，`-Publish` 通过现有Bridge事务登记首页；剪映运行时不得强制关闭或绕过检查。生产精修尚未接入，不得擅自删除口头语或停顿，不叠加未确认的新音效。
+
+新dispatch已把两项本机动作接到意图、版本和相关审片检查；其他0.2入口及章节渲染仍需总控在调用前检查。不宣称已把所有旧脚本接到gate或已完成跨编辑器生产。导出、渲染和公开发布按现有明确授权分别处理；具体交付已授权且版本范围不变时不再重复询问。上游改动给用户转交提示词，ChatCut和Remotion官方插件保持原样。
 
 素材Alpha解码、MediaInfo解析、草稿回读、首页登记、应用内播放、保存重开和原生导出分别记录。本轮Windows UI runtime不可用，不能把结构通过说成应用播放通过。当前安装的MCP入口缺安装目录环境，显式Bridge配置可用；不要为此重写codec或启动重复MCP。现有工具通过本地路径调用，禁止为了包装插件再开发同一底层能力。

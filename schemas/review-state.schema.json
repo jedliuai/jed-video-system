@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jed-video-system.local/schemas/review-state.schema.json",
+  "title": "Version-bound local operator review state",
+  "description": "Records unverified operator input, not model aesthetic approval or verified human identity. Local CLI checks artifact SHA; host must self-check and display real media before asking.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "candidates", "requests", "nextRequest"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "projectId": {"$ref": "#/$defs/nonempty"},
+    "candidates": {"type": "object", "additionalProperties": {"$ref": "#/$defs/candidate"}},
+    "requests": {"type": "array", "items": {"$ref": "#/$defs/request"}},
+    "nextRequest": {"type": "integer", "minimum": 1}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scope": {"enum": ["technical_preparation", "speech_structure", "visual_sample", "audio_sample", "rough_cut", "final_delivery"]},
+    "fingerprintMap": {"type": "object", "additionalProperties": {"$ref": "#/$defs/digest"}},
+    "candidate": {
+      "type": "object",
+      "required": ["candidateId", "scope", "scopeId", "revision", "contentRevision", "artifactDigest", "artifactKind", "locator", "patternId", "operationVersion", "operations", "coverage", "dependsOn", "dependencyFingerprints", "fingerprint"],
+      "properties": {
+        "candidateId": {"$ref": "#/$defs/nonempty"},
+        "scope": {"$ref": "#/$defs/scope"},
+        "scopeId": {"$ref": "#/$defs/nonempty"},
+        "revision": {"$ref": "#/$defs/nonempty"},
+        "contentRevision": {"$ref": "#/$defs/nonempty"},
+        "artifactDigest": {"$ref": "#/$defs/digest"},
+        "artifactKind": {"enum": ["plan", "image", "video", "audio", "timeline", "report"]},
+        "locator": {"$ref": "#/$defs/nonempty"},
+        "patternId": {"$ref": "#/$defs/nonempty"},
+        "operationVersion": {"$ref": "#/$defs/nonempty"},
+        "operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "coverage": {"enum": ["single", "sample", "batch"]},
+        "dependsOn": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "approvedSampleId": {"$ref": "#/$defs/nonempty"},
+        "dependencyFingerprints": {"$ref": "#/$defs/fingerprintMap"},
+        "fingerprint": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["digest", "kind", "locator", "revision"],
+      "properties": {
+        "digest": {"$ref": "#/$defs/digest"},
+        "kind": {"enum": ["plan", "image", "video", "audio", "timeline", "report"]},
+        "locator": {"$ref": "#/$defs/nonempty"},
+        "revision": {"$ref": "#/$defs/nonempty"}
+      },
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "required": ["value", "note", "operatorLabel", "source", "identityVerified"],
+      "properties": {
+        "value": {"enum": ["approved", "rejected", "revise"]},
+        "note": {"type": "string"},
+        "operatorLabel": {"$ref": "#/$defs/nonempty"},
+        "source": {"const": "operator_input"},
+        "identityVerified": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["requestId", "candidateId", "fingerprint", "status", "prompt", "artifact", "operations", "operationVersion", "dependencies", "candidateSnapshot"],
+      "properties": {
+        "requestId": {"$ref": "#/$defs/nonempty"},
+        "candidateId": {"$ref": "#/$defs/nonempty"},
+        "fingerprint": {"$ref": "#/$defs/digest"},
+        "status": {"enum": ["pending", "approved", "rejected", "revise", "stale"]},
+        "prompt": {"$ref": "#/$defs/nonempty"},
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/nonempty"}},
+        "operationVersion": {"$ref": "#/$defs/nonempty"},
+        "dependencies": {"$ref": "#/$defs/fingerprintMap"},
+        "candidateSnapshot": {"$ref": "#/$defs/candidate"},
+        "decision": {"$ref": "#/$defs/decision"},
+        "previousStatus": {"enum": ["pending", "approved", "rejected", "revise"]},
+        "staleReason": {"$ref": "#/$defs/nonempty"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"enum": ["approved", "rejected", "revise"]}}}, "then": {"required": ["decision"]}},
+        {"if": {"properties": {"status": {"const": "stale"}}}, "then": {"required": ["previousStatus", "staleReason"]}}
+      ],
+      "additionalProperties": false
+    }
+  }
+}

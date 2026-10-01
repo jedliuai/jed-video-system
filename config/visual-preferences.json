@@ -4,6 +4,18 @@
     "layout": "a",
     "backgroundTreatment": "original",
     "overlayPanels": false,
+    "textEdge": {
+      "mode": "fine-white-stroke",
+      "textShadow": "none",
+      "textStroke": ".02em white",
+      "paintOrder": "stroke fill",
+      "source": "explicit-user-choice-B",
+      "sampleRevision": "clean-20261002-r1",
+      "candidateId": "clean-edge-fine",
+      "approvalRequestId": "review-2-2c0bcfbcfd46",
+      "acceptedScope": "design-direction",
+      "targetEditorDisplay": "pending"
+    },
     "source": "explicit-user-preference"
   },
   "timelineEditability": {

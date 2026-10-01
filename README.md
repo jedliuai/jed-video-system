@@ -33,6 +33,8 @@
 
 已根据用户反馈选择 A 版口播：原画面直接承载元素，去掉深色底和渐变遮罩。选择记录在 `config/visual-preferences.json`，录屏不加 B-roll 的明确偏好记录在本地 `config/user-preferences.json`。
 
+文字边缘已根据2026-10-02的两版对比选择B：极细白色实线描边，关闭白色光晕。布局仍为A，两个选择分别记录。最新保存的多时间线工程已通过素材副本替换保留手动调整，说明见[可编辑交接](docs/editable-chapter-delivery.md)；剪映应用内显示仍待核对。
+
 ## 重现视觉预览
 
 复制 `scripts/preview-local.example.json` 为 `scripts/preview-local.json`，填写素材、字体和现有 Chrome 的本机路径。这个配置不进入版本管理。

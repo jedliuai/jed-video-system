@@ -21,7 +21,8 @@ export const TalkingHeadOverlay: React.FC<TalkingHeadOverlayProps> = ({
   showFooter = true,
 }) => {
   const frame = useCurrentFrame();
-  return <AbsoluteFill style={{color: t.ink, fontFamily: t.font, textShadow: t.photoTextShadow, pointerEvents: 'none'}}>
+  return <AbsoluteFill className="jed-talking-head-overlay" style={{color: t.ink, fontFamily: t.font, textShadow: t.photoTextShadow, pointerEvents: 'none'}}>
+    <style>{`.jed-talking-head-overlay * {text-shadow: ${t.photoTextShadow}; -webkit-text-stroke: ${t.photoTextStroke}; paint-order: stroke fill;}`}</style>
     {showHeader ? <SceneHeader chapters={content.chapters} activeIndex={content.chapterIndex} surface="photo" /> : null}
     <div style={{position: 'absolute', left: t.safeX, top: 225, width: 670}}>
       <Eyebrow surface="photo">{content.eyebrow}</Eyebrow>

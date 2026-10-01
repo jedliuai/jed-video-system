@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jed-video-system.local/schemas/edit-plan.schema.json",
+  "title": "Explicit source-time edit plan",
+  "description": "An authored plan, not a projection of unanswered intake preferences. Runtime validation enforces temporal relationships. Compiled motion props are described in $defs/renderProps.",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "fps", "source", "clips", "overlays", "captions"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "projectId": {"type": "string", "minLength": 1},
+    "fps": {"type": "integer", "enum": [30, 60]},
+    "source": {
+      "type": "object", "required": ["publicFile", "durationSeconds", "transcriptSourceSha256"],
+      "properties": {"publicFile": {"type": "string", "minLength": 1}, "durationSeconds": {"type": "number", "exclusiveMinimum": 0}, "transcriptSourceSha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+    },
+    "clips": {
+      "type": "array", "minItems": 1, "items": {
+        "allOf": [{"$ref": "#/$defs/sourceInterval"}, {"type": "object", "required": ["id", "speed"], "properties": {"id": {"type": "string", "minLength": 1}, "speed": {"const": 1}}}]
+      }
+    },
+    "overlays": {
+      "type": "array", "items": {
+        "allOf": [{"$ref": "#/$defs/sourceInterval"}, {"type": "object", "required": ["id", "clipId", "headlineAnchorWordId", "content"],
+          "properties": {"id": {"type": "string", "minLength": 1}, "clipId": {"type": "string", "minLength": 1}, "headlineAnchorWordId": {"type": "string", "minLength": 1}, "content": {"$ref": "#/$defs/sourceContent"}}}]
+      }
+    },
+    "captions": {
+      "type": "array", "items": {"allOf": [{"$ref": "#/$defs/sourceInterval"}, {"type": "object", "required": ["text"], "properties": {"text": {"type": "string", "minLength": 1}}}]}
+    }
+  },
+  "$defs": {
+    "sourceInterval": {"type": "object", "required": ["sourceStartSeconds", "sourceEndSeconds"], "properties": {"sourceStartSeconds": {"type": "number", "minimum": 0}, "sourceEndSeconds": {"type": "number", "exclusiveMinimum": 0}}},
+    "sourceContent": {
+      "type": "object", "required": ["chapters", "chapterIndex", "eyebrow", "headline", "footer", "points"],
+      "properties": {
+        "chapters": {"type": "array", "items": {"type": "object", "required": ["label"], "properties": {"label": {"type": "string"}, "shortLabel": {"type": "string"}}}},
+        "chapterIndex": {"type": "integer", "minimum": 0}, "eyebrow": {"type": "string"}, "headline": {"type": "array", "items": {"type": "string"}}, "footer": {"type": "string"},
+        "points": {"type": "array", "items": {"type": "object", "required": ["title", "anchorWordId"], "properties": {"title": {"type": "string"}, "detail": {"type": "string"}, "anchorWordId": {"type": "string", "minLength": 1}}}}
+      }
+    },
+    "renderProps": {
+      "type": "object", "required": ["sourceSrc", "fps", "durationInFrames", "clips", "overlays", "captions", "timingReview"],
+      "properties": {
+        "sourceSrc": {"type": "string"}, "fps": {"type": "integer", "enum": [30, 60]}, "durationInFrames": {"type": "integer", "minimum": 1},
+        "clips": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["id", "sourceStartFrame", "outputStartFrame", "durationInFrames"], "properties": {"id": {"type": "string"}, "sourceStartFrame": {"type": "integer", "minimum": 0}, "outputStartFrame": {"type": "integer", "minimum": 0}, "durationInFrames": {"type": "integer", "minimum": 1}}}},
+        "overlays": {"type": "array", "items": {"type": "object", "required": ["id", "outputStartFrame", "durationInFrames", "headlineCueFrame", "content"], "properties": {"id": {"type": "string"}, "outputStartFrame": {"type": "integer", "minimum": 0}, "durationInFrames": {"type": "integer", "minimum": 1}, "headlineCueFrame": {"type": "integer", "minimum": 0}, "content": {"type": "object", "properties": {"points": {"type": "array", "items": {"type": "object", "required": ["title", "cueFrame"], "properties": {"title": {"type": "string"}, "detail": {"type": "string"}, "cueFrame": {"type": "integer", "minimum": 0}}}}}}}}},
+        "captions": {"type": "array", "items": {"type": "object", "required": ["startFrame", "endFrame", "text"], "properties": {"startFrame": {"type": "integer", "minimum": 0}, "endFrame": {"type": "integer", "minimum": 1}, "text": {"type": "string", "minLength": 1}}}},
+        "timingReview": {"type": "array", "items": {"type": "object", "required": ["wordId", "overlayId", "role", "sourceTime", "timingQuality", "approximateBoundary", "outputCueFrame", "localCueFrame", "manualAudioReviewComplete"], "properties": {"wordId": {"type": "string"}, "overlayId": {"type": "string"}, "role": {"type": "string"}, "sourceTime": {"type": "object", "required": ["start", "end"], "properties": {"start": {"type": "number", "minimum": 0}, "end": {"type": "number", "exclusiveMinimum": 0}}}, "timingQuality": {"enum": ["forced_aligned", "interpolated", "helper_adjusted", "unknown"]}, "approximateBoundary": {"type": "boolean"}, "outputCueFrame": {"type": "integer", "minimum": 0}, "localCueFrame": {"type": "integer", "minimum": 0}, "manualAudioReviewComplete": {"type": "boolean"}}}}
+      }
+    }
+  }
+}

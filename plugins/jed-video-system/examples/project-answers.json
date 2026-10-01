@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "0.1.0",
+  "answers": {
+    "broll.talking_head": false,
+    "motion.screen_recording": true,
+    "speech.edit_mode": "preserve",
+    "sound.mode": "subtle"
+  },
+  "classifications": {}
+}

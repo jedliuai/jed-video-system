@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:intake-result:0.1.0",
+  "title": "Conditional questions and planning constraints",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion", "projectId", "status", "questions", "blockers", "decisions", "resolvedSegments", "intakeIntent", "executionPlan", "productionAdaptersReady"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "projectId": {"type": "string", "minLength": 1},
+    "status": {"enum": ["needs_answers", "needs_transcript", "ready_for_planning"]},
+    "questions": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "required", "prompt", "choices", "answerTarget", "segmentIds"],
+        "properties": {
+          "id": {"type": "string"}, "required": {"const": true},
+          "prompt": {"type": "string"}, "choices": {"type": "array", "minItems": 2},
+          "suggested": {"type": ["boolean", "string"]},
+          "answerTarget": {"type": "string"},
+          "segmentIds": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "blockers": {"type": "array", "items": {"enum": ["classification_required", "client_answers_required", "aligned_transcript_required"]}},
+    "decisions": {
+      "type": "object", "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": ["value", "source", "confirmed"],
+        "properties": {"value": {"type": ["boolean", "string"]}, "source": {"enum": ["project", "profile"]}, "confirmed": {"const": true}}
+      }
+    },
+    "resolvedSegments": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "kind", "confidence", "startSeconds", "endSeconds", "hasSpeech", "classificationSource"],
+        "properties": {
+          "id": {"type": "string"}, "kind": {"enum": ["talking_head", "screen_recording", "other"]},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "startSeconds": {"type": "number", "minimum": 0}, "endSeconds": {"type": "number", "exclusiveMinimum": 0},
+          "hasSpeech": {"type": "boolean"}, "classificationSource": {"enum": ["audit", "project"]}
+        }
+      }
+    },
+    "intakeIntent": {
+      "type": ["null", "object"], "additionalProperties": false,
+      "required": ["segmentPolicies", "speechEditMode", "soundMode", "nextStep", "note"],
+      "properties": {
+        "segmentPolicies": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["segmentId", "kind", "allowBroll", "allowBrollSearchOrDownload", "brollDecisionSource", "motionAnnotations"],
+          "properties": {
+            "segmentId": {"type": "string"}, "kind": {"enum": ["talking_head", "screen_recording", "other"]},
+            "allowBroll": {"type": "boolean"}, "allowBrollSearchOrDownload": {"type": "boolean"},
+            "brollDecisionSource": {"enum": ["project", "profile", "prototype_policy"]}, "motionAnnotations": {"type": "boolean"}
+          }
+        }},
+        "speechEditMode": {"enum": ["preserve", "review_trim", "not_applicable"]},
+        "soundMode": {"enum": ["none", "subtle", "expressive"]},
+        "nextStep": {"const": "compile_edit_plan_after_adapter_validation"}, "note": {"type": "string"}
+      }
+    },
+    "executionPlan": {"const": null},
+    "productionAdaptersReady": {"const": false}
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "ready_for_planning"}}}, "then": {"properties": {"questions": {"maxItems": 0}, "blockers": {"maxItems": 0}, "intakeIntent": {"type": "object"}}}, "else": {"properties": {"intakeIntent": {"type": "null"}}}}
+  ]
+}

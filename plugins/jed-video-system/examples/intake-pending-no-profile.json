@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "0.1.0",
+  "projectId": "synthetic-mixed-demo",
+  "status": "needs_answers",
+  "questions": [
+    {
+      "id": "broll.talking_head",
+      "required": true,
+      "prompt": "口播部分要加入 B-roll 吗？可以只使用人物与信息动效。",
+      "choices": [
+        false,
+        true
+      ],
+      "suggested": false,
+      "answerTarget": "answers.broll.talking_head",
+      "segmentIds": [
+        "intro"
+      ]
+    },
+    {
+      "id": "broll.screen_recording",
+      "required": true,
+      "prompt": "已发现口播和教程录屏；录屏部分也要加入 B-roll 吗？",
+      "choices": [
+        false,
+        true
+      ],
+      "suggested": false,
+      "answerTarget": "answers.broll.screen_recording",
+      "segmentIds": [
+        "demo"
+      ]
+    },
+    {
+      "id": "motion.screen_recording",
+      "required": true,
+      "prompt": "录屏部分要加入重点圈画、局部放大或步骤标注吗？",
+      "choices": [
+        false,
+        true
+      ],
+      "suggested": true,
+      "answerTarget": "answers.motion.screen_recording",
+      "segmentIds": [
+        "demo"
+      ]
+    },
+    {
+      "id": "speech.edit_mode",
+      "required": true,
+      "prompt": "语音保持原节奏，还是先列出重复、口头语和较长停顿供审核后精修？",
+      "choices": [
+        "preserve",
+        "review_trim"
+      ],
+      "suggested": "preserve",
+      "answerTarget": "answers.speech.edit_mode",
+      "segmentIds": [
+        "intro",
+        "demo"
+      ]
+    },
+    {
+      "id": "sound.mode",
+      "required": true,
+      "prompt": "音效使用无音效、少量提示，还是较明显的节奏增强？",
+      "choices": [
+        "none",
+        "subtle",
+        "expressive"
+      ],
+      "suggested": "subtle",
+      "answerTarget": "answers.sound.mode",
+      "segmentIds": [
+        "intro",
+        "demo"
+      ]
+    }
+  ],
+  "blockers": [
+    "client_answers_required"
+  ],
+  "decisions": {},
+  "resolvedSegments": [
+    {
+      "id": "intro",
+      "kind": "talking_head",
+      "confidence": 0.97,
+      "startSeconds": 0,
+      "endSeconds": 6,
+      "hasSpeech": true,
+      "classificationSource": "audit"
+    },
+    {
+      "id": "demo",
+      "kind": "screen_recording",
+      "confidence": 0.96,
+      "startSeconds": 6,
+      "endSeconds": 18,
+      "hasSpeech": true,
+      "classificationSource": "audit"
+    }
+  ],
+  "intakeIntent": null,
+  "executionPlan": null,
+  "productionAdaptersReady": false
+}

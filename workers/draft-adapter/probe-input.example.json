@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "jed-draft-probe/1",
+  "name": "jed-probe-mov-unique-build-name",
+  "bridgeProject": "<existing-jianying-bridge-project>",
+  "bridgeConfig": "<existing-bridge-local-config.json>",
+  "outputRoot": "<project>/work/compatibility/draft-builds",
+  "source": "<project>/motion-lab/public/live-source.mp4",
+  "sourceStartUs": 0,
+  "overlay": "<project>/work/compatibility/alpha-probe.mov",
+  "sound": "<project>/work/compatibility/draft-cue.wav",
+  "font": "<project>/motion-lab/public/fonts/jed-sans-regular.ttf",
+  "fps": 30,
+  "durationFrames": 90,
+  "testText": "可编辑文字 · 透明格式检查",
+  "soundStartFrame": 15,
+  "soundVolume": 0.08
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:intake-profile:0.1.0",
+  "title": "Explicit reusable user preferences",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "preferences": {"$ref": "urn:jed-video-system:intake-answers:0.1.0#/$defs/preferenceValues"},
+    "notes": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "$comment": "Only store explicit user choices here, never recommended defaults. Project answers override this profile."
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:intake-audit:0.1.0",
+  "title": "Jed audited source segments",
+  "type": "object",
+  "required": ["schemaVersion", "projectId", "transcriptReady", "segments"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "projectId": {"type": "string", "minLength": 1},
+    "provenance": {"enum": ["synthetic", "source-audit"]},
+    "transcriptReady": {"type": "boolean"},
+    "segments": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "kind", "confidence", "startSeconds", "endSeconds", "hasSpeech"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["talking_head", "screen_recording", "other", "unknown"]},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "startSeconds": {"type": "number", "minimum": 0},
+          "endSeconds": {"type": "number", "exclusiveMinimum": 0},
+          "hasSpeech": {"type": "boolean"}
+        }
+      }
+    }
+  },
+  "$comment": "Runtime additionally enforces unique segment IDs, finite times, start<end and nonblank IDs. Overlapping source segments are allowed."
+}

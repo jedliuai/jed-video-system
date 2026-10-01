@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "0.1.0",
+  "jianying": {"runtimeManifest": "<LOCALAPPDATA>/jianying-mcp/runtime.json", "python": null, "bridgeProject": null, "bridgeConfig": null},
+  "remotion": {"project": "motion-lab", "browserExecutable": null},
+  "videoUse": {"skillRoot": null, "python": null, "modelDirectory": null},
+  "soundDesign": {"skill": null},
+  "agy": {"executable": "agy", "proxy": null},
+  "source": {"originalVideo": null, "referenceVideo": null, "startSeconds": 0, "durationSeconds": null, "publicFile": "live-source.mp4"}
+}

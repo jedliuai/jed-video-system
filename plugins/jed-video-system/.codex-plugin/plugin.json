@@ -1,0 +1,17 @@
+{
+  "name": "jed-video-system",
+  "version": "0.2.0",
+  "description": "Jed 本地视频原型：素材问询、内容缓存转录、帧时间编译、真实预览与隔离剪映草稿。",
+  "author": {"name": "jedliuai"},
+  "keywords": ["video", "remotion", "jianying", "intake"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jed Video System",
+    "shortDescription": "素材审核、条件问询与可复用动效的本地生产原型",
+    "longDescription": "本版已接入本机 Video Use 转录、统一帧时间计划、Remotion 原声预览与独立透明素材，以及基于既有 Bridge 的隔离剪映草稿。应用内透明播放、保存重开和导出仍待验证；复杂精修与自动规划尚未实现。",
+    "developerName": "jedliuai",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["审核素材，告诉我只需要确认哪些剪辑偏好，并复用我已经明确的选择。"]
+  }
+}

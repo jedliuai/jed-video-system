@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jed-video-system:intake-answers:0.1.0",
+  "title": "Project-specific client answers",
+  "type": "object", "additionalProperties": false,
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "answers": {"$ref": "#/$defs/preferenceValues"},
+    "classifications": {
+      "type": "object", "additionalProperties": {"enum": ["talking_head", "screen_recording", "other"]}
+    }
+  },
+  "$defs": {
+    "preferenceValues": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "broll.talking_head": {"type": "boolean"},
+        "broll.screen_recording": {"type": "boolean"},
+        "motion.screen_recording": {"type": "boolean"},
+        "speech.edit_mode": {"enum": ["preserve", "review_trim"]},
+        "sound.mode": {"enum": ["none", "subtle", "expressive"]}
+      }
+    }
+  },
+  "$comment": "Runtime validates classification keys against current audit segment IDs. Omitted answers stay unresolved."
+}

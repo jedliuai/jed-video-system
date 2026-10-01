@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "0.1.0",
+  "projectId": "synthetic-mixed-demo",
+  "provenance": "synthetic",
+  "transcriptReady": true,
+  "segments": [
+    {"id": "intro", "kind": "talking_head", "confidence": 0.97, "startSeconds": 0, "endSeconds": 6, "hasSpeech": true},
+    {"id": "demo", "kind": "screen_recording", "confidence": 0.96, "startSeconds": 6, "endSeconds": 18, "hasSpeech": true}
+  ]
+}

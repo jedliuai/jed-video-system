@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jed-video-system.local/schemas/transcript.schema.json",
+  "title": "Jed source-time transcript",
+  "type": "object",
+  "required": ["schemaVersion", "source", "provenance", "language", "text", "segments", "words", "quality"],
+  "properties": {
+    "schemaVersion": {"const": "0.1.0"},
+    "source": {
+      "type": "object", "required": ["path", "sha256", "durationSeconds"],
+      "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "durationSeconds": {"type": "number", "exclusiveMinimum": 0}}
+    },
+    "provenance": {"type": "object"},
+    "language": {"type": "string"},
+    "text": {"type": "string"},
+    "segments": {
+      "type": "array", "items": {
+        "type": "object", "required": ["id", "text", "sourceTime", "timingQuality", "approximateBoundary"],
+        "properties": {"id": {"type": "string"}, "text": {"type": "string"}, "sourceTime": {"$ref": "#/$defs/sourceTime"}, "timingQuality": {"const": "asr_segment"}, "approximateBoundary": {"const": true}}
+      }
+    },
+    "words": {
+      "type": "array", "minItems": 1, "items": {
+        "type": "object", "required": ["id", "text", "sourceTime", "segmentId", "speakerId", "confidence", "timingQuality", "approximateBoundary"],
+        "properties": {
+          "id": {"type": "string"}, "text": {"type": "string"}, "sourceTime": {"$ref": "#/$defs/sourceTime"},
+          "segmentId": {"type": ["string", "null"]}, "speakerId": {"type": "string"},
+          "confidence": {"type": ["number", "null"]}, "timingQuality": {"enum": ["forced_aligned", "interpolated", "helper_adjusted", "unknown"]}, "approximateBoundary": {"type": "boolean"}
+        }
+      }
+    },
+    "quality": {"type": "object", "required": ["wordCount", "approximateWordCount", "helperStats", "manualReviewComplete", "note"],
+      "properties": {"wordCount": {"type": "integer", "minimum": 1}, "approximateWordCount": {"type": "integer", "minimum": 0}, "manualReviewComplete": {"type": "boolean"}, "helperStats": {"type": "object"}, "note": {"type": "string"}}}
+  },
+  "$defs": {"sourceTime": {"type": "object", "required": ["start", "end"], "properties": {"start": {"type": "number", "minimum": 0}, "end": {"type": "number", "exclusiveMinimum": 0}}, "description": "Seconds on the original source. Adapter additionally validates start < end <= source duration."}}
+}

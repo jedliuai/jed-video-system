@@ -1,0 +1,9 @@
+{
+  "sourceVideo": "C:/path/to/talking-head-and-screen-recording.mp4",
+  "portrait": "C:/path/to/portrait.png",
+  "regularFont": "C:/path/to/JedSans-Regular.ttf",
+  "boldFont": "C:/path/to/JedSans-Bold.ttf",
+  "browserExecutable": "C:/path/to/chrome-headless-shell.exe",
+  "talkingHeadSampleSeconds": 0.6,
+  "screenRecordingSampleSeconds": 25
+}

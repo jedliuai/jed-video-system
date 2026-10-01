@@ -1,0 +1,5 @@
+{
+  "schemaVersion": "0.1.0",
+  "preferences": {"broll.screen_recording": false},
+  "notes": {"broll.screen_recording": "用户明确偏好：教程录屏一般不加 B-roll；本项目可另行覆盖。"}
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "0.1.0",
+  "talkingHead": {
+    "layout": "a",
+    "backgroundTreatment": "original",
+    "overlayPanels": false,
+    "source": "explicit-user-preference"
+  }
+}

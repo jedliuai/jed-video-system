@@ -1,0 +1,31 @@
+motion-lab/node_modules/
+motion-lab/public/
+work/
+docs/research-media/
+config/local.json
+config/user-preferences.json
+design/agy/*.raw.json
+__pycache__/
+*.pyc
+scripts/preview-local.json
+
+# Personal source media and third-party visual references stay local.
+/个人实拍案例.mp4
+/个人头像.png
+/主LOGO.png
+/UP的动效和remotion效果参考图及视频/
+
+# Preserve the nested project's local history without publishing it.
+/motion-lab/.git/
+
+# AGY raw output can contain authentication links and session identifiers.
+/design/agy/*.json
+/design/agy/*.txt
+
+# Local credentials and machine-specific environments.
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+*.log

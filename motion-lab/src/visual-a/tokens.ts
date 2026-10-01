@@ -1,0 +1,14 @@
+export const jedTokens = {
+  ink: '#081224',
+  deep: '#0D1C34',
+  blue: '#2D6BFF',
+  cyan: '#77B8FF',
+  gold: '#F5B642',
+  white: '#F7F9FC',
+  muted: '#A8B4C7',
+  photoMuted: '#34445A',
+  photoTextShadow: '0 1px 4px rgba(255,255,255,.65)',
+  line: 'rgba(168,180,199,0.22)',
+  font: 'JedSans, sans-serif',
+  safeX: 112,
+} as const;

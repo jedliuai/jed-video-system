@@ -8,7 +8,7 @@ export const jedTokens = {
   muted: '#A8B4C7',
   photoMuted: '#34445A',
   photoTextShadow: 'none',
-  photoTextStroke: '.02em white',
+  photoTextStroke: '0 transparent',
   line: 'rgba(168,180,199,0.22)',
   font: 'JedSans, sans-serif',
   safeX: 112,

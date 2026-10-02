@@ -5,16 +5,16 @@
     "backgroundTreatment": "original",
     "overlayPanels": false,
     "textEdge": {
-      "mode": "fine-white-stroke",
+      "mode": "no-white-edge",
       "textShadow": "none",
-      "textStroke": ".02em white",
+      "textStroke": "0 transparent",
       "paintOrder": "stroke fill",
-      "source": "explicit-user-choice-B",
-      "sampleRevision": "clean-20261002-r1",
-      "candidateId": "clean-edge-fine",
-      "approvalRequestId": "review-2-2c0bcfbcfd46",
-      "acceptedScope": "design-direction",
-      "targetEditorDisplay": "pending"
+      "source": "explicit-user-request-remove-white-edge",
+      "sampleRevision": "explicit-removal-20261002-r1",
+      "candidateId": "clean-edge-none",
+      "acceptedScope": "remove-white-edge-from-current-remotion-blocks",
+      "targetEditorDisplay": "pending",
+      "approvalRequestId": "review-1-3cab68471be0"
     },
     "source": "explicit-user-preference"
   },

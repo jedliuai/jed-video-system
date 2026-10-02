@@ -69,6 +69,18 @@ class OverlayAcceptanceTest(unittest.TestCase):
         self.assertTrue(result['decodedAlphaFrameMatches'])
         self.assertFalse(result['targetEditorVerified'])
 
+    def test_transport_option_cannot_reinterpret_an_accepted_stroke_design(self):
+        self.save(self.approved)
+        with patch.object(replacement, 'decoded_frame', return_value=bytes([45, 107, 255, 255])):
+            with self.assertRaisesRegex(ValueError, 'accepted no-edge design'):
+                replacement.verify_acceptance({**self.spec, 'alphaTransport': 'premultiplied-rgb'})
+
+    def test_unknown_transport_cannot_bypass_frame_matching(self):
+        self.save(self.approved)
+        with patch.object(replacement, 'decoded_frame', return_value=bytes([45, 107, 255, 255])):
+            with self.assertRaisesRegex(ValueError, 'Unsupported alpha transport'):
+                replacement.verify_acceptance({**self.spec, 'alphaTransport': 'ignore-colors'})
+
     def test_absolute_material_path_cannot_redirect_copy_to_source_draft(self):
         with self.assertRaisesRegex(ValueError, 'relative to the draft copy'):
             replacement.relative_media(str(self.alpha.resolve()))
@@ -76,6 +88,33 @@ class OverlayAcceptanceTest(unittest.TestCase):
     def test_parent_material_path_cannot_escape_copy(self):
         with self.assertRaisesRegex(ValueError, 'relative to the draft copy'):
             replacement.relative_media('../source/material.mov')
+
+
+class AlphaTransportTest(unittest.TestCase):
+    def test_matching_premultiplied_colors_preserve_alpha(self):
+        straight = bytes([45, 107, 255, 128, 8, 18, 36, 255, 0, 0, 0, 0])
+        actual = bytes([23, 54, 128, 128, 8, 18, 36, 255, 0, 0, 0, 0])
+        proof = replacement.compare_premultiplied_rgba(actual, straight)
+        self.assertTrue(proof['alphaMaskMatches'])
+
+    def test_straight_blue_mislabelled_as_premultiplied_is_rejected(self):
+        straight = bytes([45, 107, 255, 64])
+        with self.assertRaisesRegex(ValueError, 'visible colors'):
+            replacement.compare_premultiplied_rgba(straight, straight)
+
+    def test_white_fringe_cannot_hide_in_large_transparent_area(self):
+        straight = bytes([45, 107, 255, 64]) + bytes(40000)
+        actual = bytes([245, 245, 255, 64]) + bytes(40000)
+        with self.assertRaisesRegex(ValueError, 'visible colors'):
+            replacement.compare_premultiplied_rgba(actual, straight)
+
+    def test_changed_mask_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'transparency mask'):
+            replacement.compare_premultiplied_rgba(bytes([0, 0, 0, 128]), bytes([0, 0, 0, 255]))
+
+    def test_empty_visual_frame_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'visible colors'):
+            replacement.compare_premultiplied_rgba(bytes(4), bytes(4))
 
 
 if __name__ == '__main__':

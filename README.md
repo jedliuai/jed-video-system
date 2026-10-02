@@ -35,6 +35,8 @@
 
 文字边缘按2026-10-02最新反馈移除白色描边与光晕，保留原色文字；此前极细白边B方案已取消。布局仍为A，边缘与布局分别记录。已提供从最新多时间线工程替换独立透明素材并保留手调的入口，说明见[可编辑交接](docs/editable-chapter-delivery.md)；首页登记与剪映应用内显示分别核验。
 
+用户实播截图仍有蓝字亮边后，增加透明合成诊断与从新 PNG 生成的预乘兼容候选。当前首页工程 `jed-probe-editable-alpha-20261002-r1`，保留 11 轨、29 片段、42.6 秒，剪映实播待验证；185 项行为测试通过。见[透明合成兼容记录](docs/alpha-compositing-compatibility.md)。
+
 ## 重现视觉预览
 
 复制 `scripts/preview-local.example.json` 为 `scripts/preview-local.json`，填写素材、字体和现有 Chrome 的本机路径。这个配置不进入版本管理。

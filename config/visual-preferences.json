@@ -14,7 +14,14 @@
       "candidateId": "clean-edge-none",
       "acceptedScope": "remove-white-edge-from-current-remotion-blocks",
       "targetEditorDisplay": "pending",
-      "approvalRequestId": "review-1-3cab68471be0"
+      "approvalRequestId": "review-1-3cab68471be0",
+      "deliveryCompatibility": {
+        "targetEditor": "jianying-desktop",
+        "candidateTransport": "premultiplied-rgb",
+        "candidateDraft": "jed-probe-editable-alpha-20261002-r1",
+        "editorPlaybackVerified": false,
+        "universalEncodingDefault": false
+      }
     },
     "source": "explicit-user-preference"
   },

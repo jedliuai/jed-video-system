@@ -1,5 +1,7 @@
 # Draft adapter（兼容探针阶段）
 
+透明文字的编辑器兼容修复见 [透明合成记录](../../docs/alpha-compositing-compatibility.md)。`replace_overlay_media.py` 默认逐字节匹配获准样片；可选 `alphaTransport=premultiplied-rgb` 仅支持获准无边样式，并验证 Alpha 不变及固定上限的预乘颜色误差。该检查不代表剪映实播通过，不自动授权覆盖原工程。
+
 Python worker 用既有固定 pyJianYingDraft fork 创建新工程。带测试音效的 `build` 用既有 Bridge 的 `prepare → build → verify → publish` 流程；无新音效的 `preview` 生成中性转运 manifest，用同一个 Bridge verifier/publisher 验证与登记。它不能继续编辑用户已微调的工程，不是任意 edit-plan 的完整编译器。
 
 运行时使用本机 Bridge 的 `.venv/Scripts/python.exe`。输入为 UTF-8 JSON 文件（`--input`）或 stdin；stdout 为一行 JSON；第三方进度和错误写 stderr。命令为 `probe`、`inspect-source`、`build`、`preview`，后两者的 `--publish` 调用现有 Bridge 的首页事务。没有 `--publish` 时，仅操作项目工作目录中的隔离草稿与隔离 User Data。

@@ -28,6 +28,32 @@ def relative_media(raw):
     return relative
 
 
+def compare_premultiplied_rgba(actual, straight):
+    """Allow encoding error, never a new edge, alpha mask or design change.
+
+    Fixed limits apply to visible pixels, so a mostly empty frame cannot dilute
+    the error. This validates transport equivalence, not editor playback.
+    """
+    if not straight or len(actual) != len(straight) or len(straight) % 4:
+        raise ValueError('Invalid decoded RGBA transport frame')
+    if actual[3::4] != straight[3::4]:
+        raise ValueError('Alpha transport changed the accepted transparency mask')
+    maximum, total, count = 0.0, 0.0, 0
+    for pixel, alpha in enumerate(straight[3::4]):
+        if not alpha:
+            continue
+        offset = pixel * 4
+        for channel in range(3):
+            error = abs(actual[offset + channel] - straight[offset + channel] * alpha / 255)
+            maximum = max(maximum, error)
+            total += error
+            count += 1
+    if not count or maximum > 6 or total / count > 0.5:
+        raise ValueError('Premultiplied replacement changes the accepted visible colors')
+    return {'mode': 'premultiplied-rgb', 'alphaMaskMatches': True,
+            'visibleRgbMaxError': maximum, 'visibleRgbMeanError': total / count}
+
+
 def verify_acceptance(spec):
     state = worker.read_json(spec['reviewState'])
     sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'plugins/jed-video-system/src'))
@@ -48,10 +74,19 @@ def verify_acceptance(spec):
         raise ValueError('Accepted alpha sample changed')
     actual = decoded_frame(spec['replacements'][0]['path'], spec['matchFrame'])
     expected = decoded_frame(alpha['locator'], 0)
-    if not actual or actual != expected:
+    transport = spec.get('alphaTransport', 'straight')
+    proof = None
+    if transport == 'premultiplied-rgb':
+        if candidate['operations'] != ['choose_none_white_edge_design']:
+            raise ValueError('Alpha transport repair requires the accepted no-edge design')
+        proof = compare_premultiplied_rgba(actual, expected)
+    elif transport != 'straight':
+        raise ValueError('Unsupported alpha transport')
+    elif not actual or actual != expected:
         raise ValueError('Replacement does not reproduce the accepted decoded alpha frame')
     return {'candidateId': candidate['candidateId'], 'approvalRequestId': request['requestId'],
-            'sampleDigest': candidate['artifactDigest'], 'decodedAlphaFrameMatches': True,
+            'sampleDigest': candidate['artifactDigest'], 'decodedAlphaFrameMatches': actual == expected,
+            'alphaTransportProof': proof,
             'targetEditorVerified': False}
 
 

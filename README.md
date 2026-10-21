@@ -1,3 +1,5 @@
+> **Chatgpt代充：[aishopvip.com](https://aishopvip.com)**
+
 # Jed Video System
 
 把现有剪映桥接、Remotion、Video Use 与专项 skills 组合为一个本地制作插件。已完成视觉与问询、真实转录、统一帧时间计划，以及原声预览到独立剪映草稿的本机试验闭环；完整成片流水线逐步接入。
